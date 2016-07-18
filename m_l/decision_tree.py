@@ -121,41 +121,51 @@ def calcShannonEnt(dataSet):
 # splitDataSet(myDat,0,1)
 def splitDataSet(dataSet,axis,value):
 	"""
-	按照给定的特征划分数据集
+	按照给定的特征划分数据集,当然使用不同的特征值划分数据集达到的效果是不一定的
 	input param: 
 		dataSet: s待划分的数据集
-		axis: 划分数据集的特征 
+		axis: 划分数据集的特征 0 1 2 ...etc
 		value: 特征的返回值
 	"""
 	retDataSet = []#由于需要在数据集上进行多次修改，所以创建一个新的列表对象
 	for featVec in dataSet:
-		print featVec
-		if featVec[axis] == value:
+		# print featVecs
+		if featVec[axis] == value:#将符合特征的数据抽取出来,当我们按照某个特征划分数据集时，就需要将所有符合要求的元素抽取出来
 			reducedFeatVec = featVec[:axis]
+			# print 'the feactVec[:axis] data is %s' % featVec[:axis]
 			reducedFeatVec.extend(featVec[axis+1:])
+			# print reducedFeatVec
 			retDataSet.append(reducedFeatVec)
+			# print retDataSet
 	return retDataSet
 
+dataSet,labels = createDataSet()
+print splitDataSet(dataSet,0,1)
+print splitDataSet(dataSet,0,0)
 
+
+sys.exit(0)
 
 def chooseBestFeatureToSplit(dataSet):
 	"""
 	该函数选取特征，划分数据集，计算得出最好的划分数据集的特征
 	在函数中调用的数据需要满足一定的要求：第一个要求是，数据必须是一种由列表元素组成的列表
 	第二个要求是，数据的最后一列或者每个实例的最后一个元素是当前实例的类别标签
+	熵计算将会告诉我们如何划分数据是最好的数据组织方式
 	"""
 	numFeatures = len(dataSet[0]) -1 #计算出特征值的数目，减去1 是因为最后一列是分类 
 	baseEntropy = calcShannonEnt(dataSet)#计算整个数据集的原始shannon entropy 我们保持最初的无序度量值，用于与划分之后的数据集计算的熵值进行比较
 	bestInfoGain = 0.0 #init the 最高的信息增益
 	bestFeature = -1 
-	for i in range(numFeatures):
+	for i in range(numFeatures):#这里的i其实也是这些特征值列的索引
 		featList = [example[i] for example in dataSet]#总是感觉这样特别不好，为了取出特征值这一列的数据也是蛮拼的
-		# print featList
+		print featList
 		uniqueVals = set(featList)#取出特征值这一列数据中的特征项
 		# print uniqueVals
 		newEntropy = 0.0#
 		for value in uniqueVals:
-			subDataSet = splitDataSet(dataSet,i,value)##
+			##这里splitDataSet函数的第二个参数为特征值的列位,我们将对每个特征划分数据集的结果计算一次信息熵，然后判断按照哪个特征划分数据集是最好的划分方式
+			subDataSet = splitDataSet(dataSet,i,value)
 			prob = len(subDataSet)/float(len(dataSet))
 			newEntropy += prob * calcShannonEnt(subDataSet)
 		infoGain = baseEntropy - newEntropy
@@ -164,9 +174,9 @@ def chooseBestFeatureToSplit(dataSet):
 			bestFeature = i 
 	return bestFeature
 
-dataSet,labels = createDataSet()
-print chooseBestFeatureToSplit(dataSet)
-sys.exit(0)
+# dataSet,labels = createDataSet()
+# print chooseBestFeatureToSplit(dataSet)
+# sys.exit(0)
 
 def classify(inputTree,featLabels,testVec):
 	"""
@@ -269,3 +279,5 @@ if __name__ == '__main__':
 	{'no surfacing': {0: 'no', 1: {'flippers': {0: 'no', 1: 'yes'}}}}
 
 	"""
+
+	####p 147  has problem
