@@ -100,7 +100,7 @@ def createTree(dataSet,labels):
 
 def calcShannonEnt(dataSet):
 	"""
-	计算给定数据集的香农熵
+	计算给定数据集的香农熵,这里是给定数据集哦，其实就是训练数据集，根据训练数据来做先验
 	"""
 	numEntries = len(dataSet)#yinshuai：这里计算的时候的结果是数据的行数
 	labelCounts = {}#创建一个数据字典，他的键值是最后一列的数值
@@ -109,14 +109,14 @@ def calcShannonEnt(dataSet):
 		if currentLabel not in labelCounts.keys():
 			labelCounts[currentLabel] = 0
 		labelCounts[currentLabel] += 1#每个键值都记录了当前类别出现的次数
-
+	#上面是为了计算训练数据中各个标签（已经出现的）出现的次数，类似于过去几十年巴西胜利了多少次，中国胜利了多少次
 	print labelCounts##
 	shannonEnt = 0.0 #init the shanon ent 
 	for key in labelCounts:#使用所有的类标签的发生频率计算类别出现的概率，我们将用这个概率计算香农熵
 		prob = float(labelCounts[key])/numEntries
-		print prob
+		print 'the num of prob is ',prob
 		shannonEnt -= prob * log(prob,2)
-	return shannonEnt
+	return shannonEnt#通过训练数据来计算训练数据的熵（当然是根据训练数据中各个标签的概率）
 
 # splitDataSet(myDat,0,1)
 def splitDataSet(dataSet,axis,value):
@@ -124,8 +124,10 @@ def splitDataSet(dataSet,axis,value):
 	按照给定的特征划分数据集,当然使用不同的特征值划分数据集达到的效果是不一定的
 	input param: 
 		dataSet: s待划分的数据集
-		axis: 划分数据集的特征 0 1 2 ...etc
-		value: 特征的返回值
+		axis: 划分数据集的特征 0 1 2 ...etc  这里的axis是特征值的索引，例如在这里面的特征值有2个，那么索引值就是0（列）,1(列）
+		value: 特征的返回值(这里的value是从某个特征值的数据列的集合当中取出来的)
+	划分数据集的大原则是：将无序的数据变得更加有序。
+	在划分数据集之前和之后信息发生的变化称为信息增益（information gain），知道如何计算信息增益，我们就可以计算每个特征值划分数据集获得的信息增益，获得信息增益最高的特征就是最好的选择。
 	"""
 	retDataSet = []#由于需要在数据集上进行多次修改，所以创建一个新的列表对象
 	for featVec in dataSet:
@@ -140,8 +142,14 @@ def splitDataSet(dataSet,axis,value):
 	return retDataSet
 
 dataSet,labels = createDataSet()
+print 'origin dataSet'
+print dataSet
+print 'after split'
 print splitDataSet(dataSet,0,1)
+print 'after split'
 print splitDataSet(dataSet,0,0)
+# print splitDataSet(dataSet,0,0)
+
 
 
 sys.exit(0)
@@ -155,10 +163,11 @@ def chooseBestFeatureToSplit(dataSet):
 	"""
 	numFeatures = len(dataSet[0]) -1 #计算出特征值的数目，减去1 是因为最后一列是分类 
 	baseEntropy = calcShannonEnt(dataSet)#计算整个数据集的原始shannon entropy 我们保持最初的无序度量值，用于与划分之后的数据集计算的熵值进行比较
+	print 'the base entropy is ',baseEntropy
 	bestInfoGain = 0.0 #init the 最高的信息增益
-	bestFeature = -1 
+	bestFeature = -1 #init the best feature,maybe it will return 0 or 1 
 	for i in range(numFeatures):#这里的i其实也是这些特征值列的索引
-		featList = [example[i] for example in dataSet]#总是感觉这样特别不好，为了取出特征值这一列的数据也是蛮拼的
+		featList = [example[i] for example in dataSet]#总是感觉这样特别不好，为了取出特征值这一列特征值列的数据也是蛮拼的
 		print featList
 		uniqueVals = set(featList)#取出特征值这一列数据中的特征项
 		# print uniqueVals
@@ -241,7 +250,7 @@ if __name__ == '__main__':
 	# print majorityCnt(country_list)
 
 # sorted(classCount.iteritems(),key=operator.itemgetter(1),reverse=True)
-	sys.exit(0) 	
+	# sys.exit(0) 	
 
 
 
@@ -249,6 +258,7 @@ if __name__ == '__main__':
 
 
 	print calcShannonEnt(myDat)
+	sys.exit(0)
 	"""
 	{'yes': 2, 'no': 3}
 	0.4
