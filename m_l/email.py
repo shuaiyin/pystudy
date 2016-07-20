@@ -25,14 +25,13 @@ def spamTest():#
 	for i in range(1,26):#totally 26 files    spam file list is the set of rubbish email
 		wordList = textParse(open('test_data/email/spam/%d.txt' % i).read())#using open(filepath).read() will load all content of the file into memory 
 		docList.append(wordList)
-		fullText.extend(wordList)#the extend method will change the origin value 
-		print fullText
+		fullText.extend(wordList)#the extend method will change the origin value  这里貌似只是把垃圾邮件中出现的单词汇总了
 		classList.append(1)
 		wordList = textParse(open('test_data/email/ham/%d.txt' % i).read())
 		docList.append(wordList)
 		classList.append(0)
 
-	vocabList = createVocabList(docList)#汇总所有出现过的单词
+	vocabList = createVocabList(docList)#汇总所有出现过的单词(normal email and spam)
 	trainingSet = range(50); testSet = []
 	# print trainingSet
 	"""
@@ -47,7 +46,7 @@ def spamTest():#
 		# print randIndex
 		testSet.append(trainingSet[randIndex])
 		del(trainingSet[randIndex])
-	trainMat = []; trainClasses = []
+	trainMat = []; trainClasses = []#初始化训练矩阵　和相应的训练类别
 	for docIndex in trainingSet:
 		trainMat.append(setOfWords2Vec(vocabList,docList[docIndex]))
 		trainClasses.append(classList[docIndex])

@@ -81,7 +81,7 @@ def trainNB0(trainMatrix,trainCategory):
 	numTrainDocs = len(trainMatrix)
 	numWords = len(trainMatrix[0])#32
 	#这里的trainCategory 是训练数据给出的结果类，那么0为正常言论，1为侮辱性的言论，sum(trainCategory)得到的是侮辱性的总数， 那么the next line 求得的是侮辱型言论的比例
-	pAbusive = sum(trainCategory)/float(numTrainDocs)#计算侮辱性言论所占所有言论的比例
+	pAbusive = sum(trainCategory)/float(numTrainDocs)#计算侮辱性言论所占所有言论的比例,了解这里的sum 充分利用了 侮辱性1的标记来计算侮辱性言论总数
 	"""
 	#利用贝叶斯分类器对文档进行分类时，要计算多个概率的乘积以获得文档属于某个类别的概率,即计算P(w0|1)*P(w1|1)*P(w2|1) 如果其中的一个概率为0，那么最后的乘积也为0
 	#为了降低这种影响，可以将所有词的出现次数初始化为1，并将分组初始化为2
