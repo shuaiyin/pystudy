@@ -19,12 +19,14 @@ def textParse(bigString):
 
 
 
-def spamTest():
+def spamTest():#
 	docList = []; classList = []; fullText = []
-	for i in range(1,26):#totally 26 files
+	#构造了测试数据集合，从垃圾邮件和正常邮件中分析出文本列表
+	for i in range(1,26):#totally 26 files    spam file list is the set of rubbish email
 		wordList = textParse(open('test_data/email/spam/%d.txt' % i).read())#using open(filepath).read() will load all content of the file into memory 
 		docList.append(wordList)
 		fullText.extend(wordList)#the extend method will change the origin value 
+		print fullText
 		classList.append(1)
 		wordList = textParse(open('test_data/email/ham/%d.txt' % i).read())
 		docList.append(wordList)

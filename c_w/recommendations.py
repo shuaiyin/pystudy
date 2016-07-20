@@ -27,7 +27,7 @@ import sys
 def sim_distance(prefs,person1,person2):
   # Get the list of shared_items
   """
-  返回一个有关person1与person2的基于距离的相似度评价
+  返回一个有关person1与person2的基于距离的相似度评价   计算用户之间的相似度
   这是欧几米德距离评价方法---ys:其实感觉与K-近邻有些相似了
   这是一种距离度量法
   """
@@ -52,88 +52,118 @@ def sim_distance(prefs,person1,person2):
 def sim_pearson(prefs,p1,p2):
   # Get the list of mutually rated items
   """
-  皮尔逊相关度评价
+  皮尔逊相关度评价   计算用户之间的相似度
   皮尔逊相关系数，该相关系数是判断两组数据与某一直线拟合程度的一种度量，对应的公式比欧几米德评价的计算公式复杂，但是他在数据不是很规范（normalized)的时
   候(比如，影评者对影片的评价总是相对于平均水平偏离很大时)，会倾向于给出更好的结果
   该函数将返回一个介于-1与1之间的数值，值为1则表示2个人对每一样武平均有着完全一致的评价
   """
-  si={}
+  si={}#
   #得到双方都曾评价过的物品列表
   for item in prefs[p1]: 
     if item in prefs[p2]: si[item]=1
-
   # if they are no ratings in common, return 0
   if len(si)==0: return 0
-
   # Sum calculations
   n=len(si)
   
   # Sums of all the preferences 对所有偏好求和
   sum1=sum([prefs[p1][it] for it in si])
   sum2=sum([prefs[p2][it] for it in si])
+  print sum1,sum2
 
   # Sums of the squares 对所有偏好求平方和
-  sum1Sq=sum([pow(prefs[p1][it],2) for it in si])
-  sum2Sq=sum([pow(prefs[p2][it],2) for it in si])	
+  sum1Sq=sum([pow(prefs[p1][it],2) for it in si])#用户1的影评评分平方和 ,equall to X的平方的期望
+  sum2Sq=sum([pow(prefs[p2][it],2) for it in si])#用户2的影评评分平方和 ,equall to Y的平方的期望
   
   # Sum of the products 对所有偏好求乘积之和
-  pSum=sum([prefs[p1][it]*prefs[p2][it] for it in si])
+  pSum=sum([prefs[p1][it]*prefs[p2][it] for it in si])###这里的求和，求的是XY（两个变量相乘）的总和，当然这里为了计算E(XY)而做的铺垫 E(XY) = SUM(XY)/N
   
   # Calculate r (Pearson score) 计算皮尔逊评价值
+  #这里的(sum1*sum2)/pow(n,2)得到的是积的期望，类似于E(XY),而这里的pSum又是X*Y的积的和，那么sum(X*Y)/N得到的就是E(XY)
+  #下面得到的应该是n(E(XY)-E(X)*E(Y))
   num=pSum-(sum1*sum2/n)
-  den=sqrt((sum1Sq-pow(sum1,2)/n)*(sum2Sq-pow(sum2,2)/n))
+  den=sqrt((sum1Sq-pow(sum1,2)/n)*(sum2Sq-pow(sum2,2)/n))##仔细考虑这里的除以n的原因
+  """
+  两个变量之间相关系数的求法
+  (1)cov(X,Y) = [E(XY) - E(X)E(Y)]/ 具体公式自己查
+
+  """
   if den==0: return 0
 
   r=num/den
 
   return r
 
-# sim_pearson()
 
-# result = sim_pearson(critics,'Lisa Rose','Mick LaSalle')
-# print result
-# sys.exit(0)
+result = sim_pearson(critics,'Lisa Rose','Mick LaSalle')
+print result
+sys.exit(0)
 
 
 # Returns the best matches for person from the prefs dictionary. 
 # Number of results and similarity function are optional params.
 def topMatches(prefs,person,n=5,similarity=sim_pearson):
+  """
+  从反映偏好的字典中返回最为匹配者  找出与自己有相似品味的影评者
+  返回结果的个数和相似度函数均为可选参数
+  """
   scores=[(similarity(prefs,person,other),other) 
-                  for other in prefs if other!=person]
+                  for other in prefs if other!=person]#不和自己做比较
   scores.sort()
   scores.reverse()
   return scores[0:n]
 
+
+# print topMatches(critics,'Toby',n=3)
+# sys.exit(0)
 # Gets recommendations for a person by using a weighted average
 # of every other user's rankings
 def getRecommendations(prefs,person,similarity=sim_pearson):
-  totals={}
-  simSums={}
-  for other in prefs:
-    # don't compare me to myself
-    if other==person: continue
-    sim=similarity(prefs,person,other)
+  """
+  1.利用所有他人评价的加权平均，为某人提供建议(这里进行推荐的时候不仅仅只是依赖相关度)
+  2.计算相似度的方法是可选项，既可以选择皮尔逊相关度评价，也可以选择欧几米德相关度评价方法等
+  3.找到一位趣味相投的影评者并阅读他所撰写的评论固然不错，但是现在我们真正想要的不是这些，而是一份影片的推荐，
+  当然，我们可以查找与自己品味最为相近的人，并从他喜欢的影片中找出一部自己还未看过的影片，但是这样太随意了
+  4.有时，这种方法可能会有问题：评论者还未对某些影片做过评价，而这些影片也许就是我们所喜欢的；还有一种可能，
+  我们会找到一个热衷某部影片的古怪评论者，而根据topMatches所返回的结果，所有的其他评论者都不看好这部影片
+  """
 
+  totals={}#用于存储相似度和用户评价的加权和 这里的key是影视作品的名称，值为加权值（相似度*其他某个用户对影视的评价)
+  simSums={}#用于存储其他用户对于某个影视作品只要进行了评论，那么就把其相似度累加过来. 这里的key是影视作品的名称,值为评论过作品的其他人和本人之间的相似度的总和
+  for other in prefs:#对字典进行遍历的时候其实遍历的是字典的key，那么这里就是评影人
+    # don't compare me to myself
+    if other==person: continue#
+    sim=similarity(prefs,person,other)#计算输入用户和其他用户之间的相关度
     # ignore scores of zero or lower
     if sim<=0: continue
-    for item in prefs[other]:
-	    
-      # only score movies I haven't seen yet
-      if item not in prefs[person] or prefs[person][item]==0:
+    for item in prefs[other]:#这里的item获取到的是他人所评价过的电影
+      # only score movies I "haven't" seen yet 
+      if item not in prefs[person] or prefs[person][item]==0:#如果用户没有对这个影片做过评价，或者评价为0
+        #其实下面得到的就是other看过的电影，但是本人没有看过的电影
         # Similarity * Score
-        totals.setdefault(item,0)
+        totals.setdefault(item,0)#这里的setdefault用的非常好，dict.setdefault(key,[default])如果键在字典中,返回这个键所对应的值。如果键不在字典中,向字典中插入这个键,并且以default为这个键的值
         totals[item]+=prefs[other][item]*sim
         # Sum of similarities
-        simSums.setdefault(item,0)
-        simSums[item]+=sim
+        simSums.setdefault(item,0)#
+        simSums[item]+=sim#
 
   # Create the normalized list
-  rankings=[(total/simSums[item],item) for item,total in totals.items()]
+  rankings=[(total/simSums[item],item) for item,total in totals.items()]#dict.items will create a tuple list make of (key,value)
+
 
   # Return the sorted list
   rankings.sort()
   rankings.reverse()
   return rankings
+
+print getRecommendations(critics,'Toby')
+"""
+其实就是给那些用户所没有看过的电影给个推荐。
+[(3.3477895267131013, 'The Night Listener'), (2.8325499182641614, 'Lady in the Water'), (2.5309807037655645, 'Just My Luck')]
+
+"""
+# result = sim_pearson(critics,'Lisa Rose','Mick LaSalle')
+sys.exit(0)
 
 def transformPrefs(prefs):
   result={}
