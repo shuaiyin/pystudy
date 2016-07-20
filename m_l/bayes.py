@@ -39,6 +39,7 @@ def createVocabList(dataSet):
 def setOfWords2Vec(vocabList,inputSet):
 	"""
 	function:我们知道了所有的评论所组成的单词列表,那么我们拿出其中的一条评论出来，然后对其中的单词依次在之前的单词列表上做标记
+	在该函数中，我们将每个词的出现与否作为一个特征，这可以被描述为词集模型(self-of-words-model)
 	input param:
 			vocabList: 所有出现的词汇的集合哦 
 			inputSet  输入的某个数据集合（例如对狗狗的某条评论）
@@ -48,10 +49,24 @@ def setOfWords2Vec(vocabList,inputSet):
 	# print returnVec
 	for word in inputSet:
 		if word in vocabList:
-			returnVec[vocabList.index(word)] = 1
+			returnVec[vocabList.index(word)] = 1#这里只要单词在文档中出现，那么就给我们的总词汇表进行标记，而不清楚到底出现了几次的情况，这就是词集模型
 		else:
 			print "the word : %s is not in my Vocabulary! " % word
 	return returnVec
+
+
+def setOfWords2VecMN(vocabList,inputSet):
+	"""
+	如果一个词在文档中出现不止一次，这可能意味着这比词集模型包含更多的信息，这种方法被称为词袋模型(bag-of-words model)
+	在词袋模型中，每个单词可以出现多次 
+	"""
+	returnVec = [0] * len(vocabList)
+	for word in inputSet:
+		if word in inputSet:
+			returnVec[vocabList.index(word)] += 1
+	return returnVec
+
+
 
 
 def trainNB0(trainMatrix,trainCategory):
@@ -83,7 +98,7 @@ def trainNB0(trainMatrix,trainCategory):
 	p1Denom = 2.0
 
 	for i in range(numTrainDocs):
-		print trainMatrix[i]
+		# print trainMatrix[i]
 		if trainCategory[i] == 1:#这里的trainMatrix和trainCategory是相对应的，这里class=1即用于判断如果这条言论是侮辱性言论
 			p1Num += trainMatrix[i]#对于一条评论，假设其是侮辱性言论，那么将这条训练向量累加到初始的p1Num零向量上,这里的数组的矢量运算，不是list运算
 			p1Denom += sum(trainMatrix[i])#由于每条评论的长度是不同的，所以在单词表中出现的标记次数也是不同的。
@@ -107,7 +122,7 @@ def classifyNB(vec2Classify,p0Vec,p1Vec,pClass1):
 		vec2Classify: 要分类的向量vec2Classify(要知道这个待分类的向量是如何得到的)
 		p0Vec,p1Vec,pClass1 使用函数trainNB0 计算得到的三个概率
 	"""
-	p1 = sum(vec2Classify * p1Vec) + log(pClass1)
+	p1 = sum(vec2Classify * p1Vec) + log(pClass1)#
 	p0 = sum(vec2Classify * p0Vec) + log(1.0-pClass1)
 	if p1 > p0: return 1
 	else: return 0 
@@ -132,21 +147,26 @@ def testNB():
 
 
 testNB()
-sys.exit(0)
+"""
+['love', 'my', 'dalmation'] classified as : 0
+['stupid', 'garbage'] classified as : 1
+
+"""
+# sys.exit(0)
 
 
 
-listOPosts,listClasses = loadDataSet()#GET THE TESE DATA
-myVocabList = createVocabList(listOPosts)#get the all vovalary !!
-trainMat = []#init the train matrix 
-for postinDoc in listOPosts:
-	trainMat.append(setOfWords2Vec(myVocabList,postinDoc))
+# listOPosts,listClasses = loadDataSet()#GET THE TESE DATA
+# myVocabList = createVocabList(listOPosts)#get the all vovalary !!
+# trainMat = []#init the train matrix 
+# for postinDoc in listOPosts:
+# 	trainMat.append(setOfWords2Vec(myVocabList,postinDoc))
 
-# print trainMat[0]
-trainNB0(trainMat,listClasses)
-p0V,p1V,pAb = trainNB0(trainMat,listClasses)
-print pAb
-print p0V,p1V
+# # print trainMat[0]
+# trainNB0(trainMat,listClasses)
+# p0V,p1V,pAb = trainNB0(trainMat,listClasses)
+# print pAb
+# print p0V,p1V
 """
 0.5
 [ 0.04166667  0.04166667  0.04166667  0.          0.          0.04166667
@@ -181,11 +201,12 @@ print p0V,p1V
 
 
 
-sys.exit(0)
-print listOPosts[3]
 # sys.exit(0)
-print setOfWords2Vec(myVocabList,listOPosts[3])#['stop', 'posting', 'stupid', 'worthless', 'garbage']
+# print listOPosts[3]
+# # sys.exit(0)
+# print setOfWords2Vec(myVocabList,listOPosts[3])#['stop', 'posting', 'stupid', 'worthless', 'garbage']
 
+# print '-----------this is the new test-------------------'
 # print myVocabList
 
 
