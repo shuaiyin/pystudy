@@ -19,6 +19,10 @@ critics={'Lisa Rose': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
  'The Night Listener': 3.0, 'Superman Returns': 5.0, 'You, Me and Dupree': 3.5},
 'Toby': {'Snakes on a Plane':4.5,'You, Me and Dupree':1.0,'Superman Returns':4.0}}
 
+"""
+上面这些数据可以从http://www.grouplens.org/node/73  获取到涉及电影评价的真实数据，叫做MovieLens,有不同数据量集可以下载，解压之后归档文件中包含了不少文件
+"""
+
 
 from math import sqrt
 import sys
@@ -35,7 +39,7 @@ def sim_distance(prefs,person1,person2):
   for item in prefs[person1]: 
     if item in prefs[person2]: si[item]=1
   # if they have no ratings in common, return 0 二者没有相同之处
-  if len(si)==0: return 0
+  if len(si)==0: return 0#这里进行一次迭代只是为了发现是不是二者没有任何相似的影集
   # Add up the squares of all the differences
   sum_of_squares=sum([pow(prefs[person1][item]-prefs[person2][item],2) 
                       for item in prefs[person1] if item in prefs[person2]])
@@ -44,8 +48,6 @@ def sim_distance(prefs,person1,person2):
 
 # result = sim_distance(critics,'Lisa Rose','Mick LaSalle')
 # print result
-# sys.exit(0)
-
 
 
 # Returns the Pearson correlation coefficient for p1 and p2
@@ -69,7 +71,7 @@ def sim_pearson(prefs,p1,p2):
   # Sums of all the preferences 对所有偏好求和
   sum1=sum([prefs[p1][it] for it in si])
   sum2=sum([prefs[p2][it] for it in si])
-  print sum1,sum2
+  # print sum1,sum2
 
   # Sums of the squares 对所有偏好求平方和
   sum1Sq=sum([pow(prefs[p1][it],2) for it in si])#用户1的影评评分平方和 ,equall to X的平方的期望
@@ -82,7 +84,7 @@ def sim_pearson(prefs,p1,p2):
   #这里的(sum1*sum2)/pow(n,2)得到的是积的期望，类似于E(XY),而这里的pSum又是X*Y的积的和，那么sum(X*Y)/N得到的就是E(XY)
   #下面得到的应该是n(E(XY)-E(X)*E(Y))
   num=pSum-(sum1*sum2/n)
-  den=sqrt((sum1Sq-pow(sum1,2)/n)*(sum2Sq-pow(sum2,2)/n))##仔细考虑这里的除以n的原因
+  den=sqrt((sum1Sq-pow(sum1,2)/n)*(sum2Sq-pow(sum2,2)/n))##仔细考虑这里的除以n的原因,,,i think this has some problem in it 
   """
   两个变量之间相关系数的求法
   (1)cov(X,Y) = [E(XY) - E(X)E(Y)]/ 具体公式自己查
@@ -95,9 +97,9 @@ def sim_pearson(prefs,p1,p2):
   return r
 
 
-result = sim_pearson(critics,'Lisa Rose','Mick LaSalle')
-print result
-sys.exit(0)
+# result = sim_pearson(critics,'Lisa Rose','Mick LaSalle')
+# print result
+# sys.exit(0)
 
 
 # Returns the best matches for person from the prefs dictionary. 
@@ -116,6 +118,9 @@ def topMatches(prefs,person,n=5,similarity=sim_pearson):
 
 # print topMatches(critics,'Toby',n=3)
 # sys.exit(0)
+
+
+
 # Gets recommendations for a person by using a weighted average
 # of every other user's rankings
 def getRecommendations(prefs,person,similarity=sim_pearson):
@@ -146,24 +151,21 @@ def getRecommendations(prefs,person,similarity=sim_pearson):
         # Sum of similarities
         simSums.setdefault(item,0)#
         simSums[item]+=sim#
-
   # Create the normalized list
   rankings=[(total/simSums[item],item) for item,total in totals.items()]#dict.items will create a tuple list make of (key,value)
-
-
   # Return the sorted list
   rankings.sort()
   rankings.reverse()
   return rankings
 
-print getRecommendations(critics,'Toby')
+# print s(critics,'Toby')
 """
 其实就是给那些用户所没有看过的电影给个推荐。
 [(3.3477895267131013, 'The Night Listener'), (2.8325499182641614, 'Lady in the Water'), (2.5309807037655645, 'Just My Luck')]
 
 """
 # result = sim_pearson(critics,'Lisa Rose','Mick LaSalle')
-sys.exit(0)
+# sys.exit(0)
 
 def transformPrefs(prefs):
   result={}
@@ -219,7 +221,21 @@ def getRecommendedItems(prefs,itemMatch,user):
   rankings.reverse( )
   return rankings
 
-def loadMovieLens(path='/data/movielens'):
+def loadMovieLens(path='./testdata/ml-100k'):
+  """
+  上面这些数据可以从http://www.grouplens.org/node/73  获取到涉及电影评价的真实数据，叫做MovieLens,有不同数据量集可以下载，解压之后归档文件中包含了不少文件
+  我们关系的是u.item和u.data前者包含了一组有关影片ID和片名的列表，后者包含了如下形式的给出的实际评价情况。
+
+  196 242 3 881250949
+  186 302 3 891717742
+  22  377 1 878887116
+  244 51  2 880606923
+  166 346 1 886397596
+  298 474 4 884182806
+  115 265 2 881171488
+  此处的每一行数据都包含了一个用户ID,影片ID，用户对该片给出的评分，以及评价时间
+
+  """
   # Get movie titles
   movies={}
   for line in open(path+'/u.item'):
@@ -233,3 +249,17 @@ def loadMovieLens(path='/data/movielens'):
     prefs.setdefault(user,{})
     prefs[user][movies[movieid]]=float(rating)
   return prefs
+
+prefs = loadMovieLens()
+# print prefs['87']#这个数据集并没有给出人的姓名，只是有索引id
+"""
+{'Birdcage, The (1996)': 4.0, 'E.T. the Extra-Terrestrial (1982)': 3.0, 'Bananas (1971)': 5.0, 'Sting, The (1973)': 5.0, 
+'Bad Boys (1995)': 4.0, 'In the Line of Fire (1993)': 5.0, 'Star Trek: The Wrath of Khan (1982)': 5.0, 'Speechless (1994)': 4.0,
+ 'Mission: Impossible (1996)': 4.0, 'Return of the Pink Panther, The (1974)': 4.0, 'Under Siege (1992)': 4.0, 'I.Q. (1994)': 5.0, 
+ 'Evil Dead II (1987)': 2.0, 'Heat (1995)': 3.0, 'Naked Gun 33 1/3: The Final Insult (1994)': 4.0, etc.................}
+"""
+print getRecommendations(prefs,'87')[:5]
+"""
+[(5.0, 'They Made Me a Criminal (1939)'), (5.0, 'Star Kid (1997)'), (5.0, 'Santa with Muscles (1996)'), 
+(5.0, 'Saint of Fort Washington, The (1993)'), (5.0, 'Marlene Dietrich: Shadow and Light (1996) ')]
+"""

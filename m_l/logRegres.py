@@ -42,7 +42,6 @@ def writeFile(content):
 
 
 
-
 def sigmoid(inX): 
 	"""
 	总述：ys：使用这个函数的目的就是把线性回归转换为logitic回归（0-1之间）
@@ -52,6 +51,8 @@ def sigmoid(inX):
 	inX = θ.transpose() * X  (这里的 是回归系数向量，这里的X是自变量向量)
 	那么当然这里的X向量当中的值经常是参差不齐的，例如男子的存款这一特征值，在进行运算之后,得到的"线性回归值"可能范围不受控制哦，
 	那么通过“逻辑,逻辑，逻辑“回归，就是把这些东西整到0-1之间这个概率上，是不是有点逻辑的韵味，是不是更加直观呢
+    Logistic回归用于二分类问题，面对具体的"二分类"问题，比如明天是否会下雨。人们通常是估计，并没有十足的把握。因此用概率来表示再适合不过了。
+    Logistic本质上是一个基于条件概率的判别模型(DiscriminativeModel)。利用了Sigma函数值域在[0,1]这个特性。
 
 	"""
 	return 1.0/(1+exp(-inX))
@@ -79,7 +80,7 @@ def gradAscent(dataMatIn,classLabels):
 		writeFile(error)
 		writeFile('\n*******************\n')
 		"""
-		weights = weights + alpha * dataMatrix.transpose()*error#这里处理的是矩阵运算
+		weights = weights + alpha * dataMatrix.transpose()*error#这里处理的是矩阵运算### 使用alpha*gradient（梯度）更新回归系数值
 		# print 'the weigths is ',weights
 	return weights
 
@@ -87,6 +88,8 @@ def gradAscent(dataMatIn,classLabels):
 
 def plotBestFit(wei):
     """
+    这里画出数据集（使用scatter绘制散点图）和logistic回归最佳拟合直线（使用plot绘制）
+    画出决策边界
     """
     import matplotlib.pyplot as plt 
     weights = wei.getA()##getA is a method the change numpy.matrx into numpy.ndarray
@@ -102,19 +105,26 @@ def plotBestFit(wei):
         else:
             xcord2.append(dataArr[i,1])
             ycord2.append(dataArr[i,2])
-    fig = plt.figure()
+    fig = plt.figure()#Figure(640x480)
+    #这里的add_subplot中的111三个数字分别代表把划分分割成1行1列，图像画在从左到右从上到下的第1块，当然这里只是划分了一块，所以就只有一个地方放图
+    #更加直观的例子，例如参数为349,那么则将画布分割成3行4列（3*4=12）块，图像被放置到藏左到右从上到下的第9块上.如果要在一个图表中绘制多个子图，可使用 subplot。
     ax = fig.add_subplot(111)
-    ax.scatter(xcord1,ycord1,s=10,c='red',marker='s')##scatter 用于点绘制，需要传入轴坐标list 
-    ax.scatter(xcord2,ycord2,s=30,c='green')
-    x = arange(-3.0,3.0,0.1)
-    y = (-weights[0]-weights[1]*x)/weights[2]
-    ax.plot(x,y)
+    ax.scatter(xcord1,ycord1,s=30,c='red',marker='s')##scatter 用于点绘制，需要传入轴坐标list 
+    ax.scatter(xcord2,ycord2,s=30,c='green')#这里的marker表示绘制点的时候使用的形状，为s表示square（正方形），默认是圆形，这里的s表示size，对于圆形图案来说，那么就是半径这种东西了吧，我认为
+    x = arange(-3.0,3.0,0.1)#这里的定义了这条最佳拟合直线的x轴坐标数组 
+    """
+    回忆sigmoid函数在x=0处，函数的值为0.5，这个位置就是两个分类的分界处，因此我们设定 θ0 * X0 + θ1 * X1 +  θ2 * X2 =0,然后解除X2和X1的关系式
+    （即分割线方程，注意X0=1.0)
+	当然这里的X1，X2分别用x,y坐标表示
+    """
+    y = (-weights[0]-weights[1]*x)/weights[2]#
+    ax.plot(x,y)#这里的plot用于绘制直线图，不同于scatter用于绘制散点图，但是二者都是输入两组array
     plt.xlabel('X1')
     plt.xlabel('X2')
     plt.show()
 
 
-dataArr,labelMat = loadDataSet()
+# dataArr,labelMat = loadDataSet()
 # d =  mat(dataArr)[:2].transpose()
 # print d 
 # # sys.exit(0)
@@ -123,13 +133,35 @@ dataArr,labelMat = loadDataSet()
 # print  d * init_axis
 # print sigmoid(d*init_axis)
 
-weights = gradAscent(dataArr, labelMat)
+# weights = gradAscent(dataArr, labelMat)
+# 
+
+
+# weight_array = weights.getA()
+# n = len(dataArr)
+# for line in dataArr:
+# 	x0 = line[0]
+# 	x1 = line[1]
+# 	x2 = line[2]
+# 	x_h = weight_array[0][0] * x0 + weight_array[1][0] * x1 + weight_array[2][0] * x2
+# 	l_h = sigmoid(x_h)
+# 	print l_h
+
+
+	# print x0,x1,x2
+
+
+
 # print weights
-# sys.exit(0)
-plotBestFit(weights)
+
+##vertify the result 
+
+
+
+# plotBestFit(weights)
 # gradAscent(dataMat,labelMat)
 # print labelMat
-sys.exit(0)
+# sys.exit(0)
 
 
 
@@ -137,14 +169,25 @@ sys.exit(0)
 
 
 def stocGradAscent0(dataMatrix, classLabels):
-    m,n = shape(dataMatrix)
+    """
+    随机梯度上升算法和梯度上升算法在代码上很相似，但也有一些区别：
+    第一,后者的变量h和误差error都是向量，而前者则全是数值；
+    第二，前者没有矩阵的转换过程，所有的变量数据类型都是numpy数组
+    """
+    m,n = dataMatrix.shape
     alpha = 0.01
-    weights = ones(n)   #initialize to all ones
+    weights = ones(n)   #initialize to all ones   the type is ndarray 
     for i in range(m):
         h = sigmoid(sum(dataMatrix[i]*weights))
         error = classLabels[i] - h
         weights = weights + alpha * error * dataMatrix[i]
     return weights
+
+
+dataArr,labelMat = loadDataSet()#this type of dataArr is list
+weights = stocGradAscent0(array(dataArr),labelMat)
+plotBestFit(mat(weights))
+sys.exit(0)
 
 def stocGradAscent1(dataMatrix, classLabels, numIter=150):
     m,n = shape(dataMatrix)
