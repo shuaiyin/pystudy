@@ -20,6 +20,7 @@ import sys
 # from math import exp#wrong
 from numpy import mat,ones,exp,array,arange ##warnings:虽然math包里面也有exp但是math包里面的不能对matrix做运算，所以需要在numpy中引入这个exp
 
+
 def loadDataSet():
 	"""
 	生成初始测试数据集
@@ -40,8 +41,6 @@ def writeFile(content):
 	fileHandler.close
 
 
-
-
 def sigmoid(inX): 
 	"""
 	总述：ys：使用这个函数的目的就是把线性回归转换为logitic回归（0-1之间）
@@ -57,12 +56,15 @@ def sigmoid(inX):
 	"""
 	return 1.0/(1+exp(-inX))
 
+
+
 def gradAscent(dataMatIn,classLabels):
 	"""
 	梯度上升算法,
 	该函数有2个参数，第一个参数是dataMatIn,它是一个2维Numpy数组，每列分别代表不同的特征(身高，家产，颜值等),每行则代表每个训练样本(民间找到的脑残粉，拜金女等样本)
 	我们这里采用的是100个样本的简单数据集，它包含了2个特征X1和X2，再加上第0维特征X0，所以dataMatIn里存放的是100*3的矩阵
 	第二个参数是类别标签，它是一个1*100的行向量
+
 	"""
 	dataMatrix = mat(dataMatIn)#将一个list转换为矩阵
 	labelMat = mat(classLabels).transpose()#为了便于矩阵计算，需要将该行向量转换为列向量，使用转置
@@ -73,7 +75,7 @@ def gradAscent(dataMatIn,classLabels):
 	maxCycles = 5000#myCycles是迭代次数
 	weights = ones((n,1))#每次回归系数初始化为1,也就是最开始迭代的时候，我们认为所有变量（特征值）的权值都是1，也就是最开始公平对待
 	for k in range(maxCycles):#在for循环迭代完成之后，将返回训练好的回归系数
-		h = sigmoid(dataMatrix*weights)#
+		h = sigmoid(dataMatrix*weights)#当然这里的weights是ones单位数组，然而dataMatrix是矩阵，这里可以得到的就是矩阵可以乘以数组，可以乘以列表等，只要满足相乘条件即可，感觉就像是矩阵乘以矩阵是的
 		# print 'logis  is ',h
 		error = (labelMat - h)#这里的error就是一种误差率，线性回归值与训练值之间的误差向量
 		"""
@@ -81,9 +83,8 @@ def gradAscent(dataMatIn,classLabels):
 		writeFile('\n*******************\n')
 		"""
 		weights = weights + alpha * dataMatrix.transpose()*error#这里处理的是矩阵运算### 使用alpha*gradient（梯度）更新回归系数值
-		# print 'the weigths is ',weights
+		# print 'the weigths is ',weights  上面这个公式直接使用的是计算权重的化简公式
 	return weights
-
 
 
 def plotBestFit(wei):
@@ -124,49 +125,6 @@ def plotBestFit(wei):
     plt.show()
 
 
-# dataArr,labelMat = loadDataSet()
-# d =  mat(dataArr)[:2].transpose()
-# print d 
-# # sys.exit(0)
-# init_axis = ones((2,1))
-# print init_axis
-# print  d * init_axis
-# print sigmoid(d*init_axis)
-
-# weights = gradAscent(dataArr, labelMat)
-# 
-
-
-# weight_array = weights.getA()
-# n = len(dataArr)
-# for line in dataArr:
-# 	x0 = line[0]
-# 	x1 = line[1]
-# 	x2 = line[2]
-# 	x_h = weight_array[0][0] * x0 + weight_array[1][0] * x1 + weight_array[2][0] * x2
-# 	l_h = sigmoid(x_h)
-# 	print l_h
-
-
-	# print x0,x1,x2
-
-
-
-# print weights
-
-##vertify the result 
-
-
-
-# plotBestFit(weights)
-# gradAscent(dataMat,labelMat)
-# print labelMat
-# sys.exit(0)
-
-
-
-
-
 
 def stocGradAscent0(dataMatrix, classLabels):
     """
@@ -185,7 +143,20 @@ def stocGradAscent0(dataMatrix, classLabels):
 
 
 dataArr,labelMat = loadDataSet()#this type of dataArr is list
-weights = stocGradAscent0(array(dataArr),labelMat)
+# weights = stocGradAscent0(array(dataArr),labelMat)
+dataMatrix = array(dataArr)
+m,n = dataMatrix.shape
+alpha = 0.01
+weights = ones(n)
+for i in range(m):
+    h = sigmoid(sum(dataMatrix[i] * weights))
+    error = labelMat[i] - h
+    weights = weights + alpha * error * dataMatrix[i]
+
+print weights
+print type(weights)
+
+# sys.exit(0)
 plotBestFit(mat(weights))
 sys.exit(0)
 

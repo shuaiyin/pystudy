@@ -1,6 +1,8 @@
 #coding=utf-8
 from numpy import * 
 import operator 
+import sys
+
 
 DATING_FILE_PATH = './net_date/datingTestSet.txt'
 
@@ -9,11 +11,10 @@ def createDataSet():
 	labels = ['A','A','B','B']
 	return group,labels
 
-# createDataSet()
 def classify0(inX,dataSet,labels,k):
 	"""
 	该函数有4个输入参数： 
-	用于分类的输入向量是inX,输入的训练样本集为dataSet,标签向量为labels  最后的参数k表示用于选择最近邻居的数目
+	用于分类的输入向量是inX(这里的输入向量是我们想计算的点　),输入的训练样本集为dataSet,标签向量为labels  最后的参数k表示用于选择最近邻居的数目
 	其中标签向量的元素数目和矩阵dataSet的行数相同
 
 	#steps 
@@ -31,7 +32,7 @@ def classify0(inX,dataSet,labels,k):
 	sqDiffMat = diffMat ** 2 #vector calc 
 	print sqDiffMat
 	print type(sqDiffMat) #<type 'numpy.ndarray'>
-	sqDistances = sqDiffMat.sum(axis=1)
+	sqDistances = sqDiffMat.sum(axis=1)#axis 0 and axis 1 and no axis argument will return different sum value !!!!!
 	distances = sqDistances ** 0.5 #is the end of ola calc 
 	sortedDistIndicies = distances.argsort()##这个argsort用于在ndarray上 用于判断元素的排名位置
 	print sortedDistIndicies
@@ -42,8 +43,7 @@ def classify0(inX,dataSet,labels,k):
 	sortedClassCount = sorted(classCount.iteritems(),
 		key=operator.itemgetter(1),reverse=True)#asc not desc 
 	return sortedClassCount[0][0]
-
-
+	
 
 """
 
