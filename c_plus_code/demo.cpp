@@ -1,5 +1,6 @@
 #include <iostream>
-#include<string.h>
+#include <string.h>
+#include <map>
 using namespace std;
 class CGoods{
 private:
@@ -23,6 +24,8 @@ void CGoods::RegisterGoods(char* name,int amount,float price){
   return Price;
 }
 
+
+
 int main(void)
 {
     CGoods cgoods;//instance the class 
@@ -30,5 +33,13 @@ int main(void)
     cout << cgoods.getPrice();
     cout << cgoods.getAmount();
     cout << "hello worldheh\n";
-    return 0;
+    cout << endl;
+    map<string,int> word_count;//empty map from string to int 
+    string word = "yinshuai";
+    while(cin >> word)
+      ++word_count[word];  
+    // map<string,int>::const_iterator map_it = w
+    // return 0;
+
+
 }
