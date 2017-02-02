@@ -18,8 +18,12 @@ public:
    };
 };
 int main(){
-   vector<int> v(10,-1);//init a vector with the ten -1 same element 
+   
+   vector<int> v(10,-1);
+   //init a vector with the ten -1 same element 
+   cout << v;
+   return 0;
    Solution so = Solution();
-   cout << so.removeDuplicates(v);
+   cout << so.removeDuplicates(v) << endl;
    return 0;
 }

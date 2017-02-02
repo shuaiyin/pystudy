@@ -129,6 +129,8 @@ def biKmeans(dataSet,k,distMeas=distEclud):
 	"""
 	m = shape(dataSet)[0]
 	clusterAssment = mat(zeros((m,2)))#init cluster and distance !!!
+	print dataSet
+	sys.exit(0)
 	centroid0 = mean(dataSet,axis=0).tolist()[0]#求得第一个质心！第一个质心就是特征值列的均值构成的
 	centList = [centroid0]#将第一个质心放到质心列表集合中！！！
 	#在这个for 循环之后，clusterAssment 当中就存储了各个点距离质心之间的平方距离了

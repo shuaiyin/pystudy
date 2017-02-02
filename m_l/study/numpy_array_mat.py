@@ -2,7 +2,7 @@
 """
 看下numpy中数组和矩阵之间的区别
 """
-from numpy import mat,array
+from numpy import *
 
 
 # 因为numpy中的数组和矩阵是有区别的。

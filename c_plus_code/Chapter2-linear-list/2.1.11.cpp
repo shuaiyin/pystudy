@@ -25,6 +25,17 @@ public:
 		return return_index;
 	}
 
+
+	int removeTest(vector<int> &nums,int target){
+		int index =0;
+		for(int i=0;i<nums.size();i++){
+			if(nums[i] != target)
+				index++;
+		}
+		return index;
+
+	}
+
 	int removeElement3(vector<int> &nums,int target){
 		int index=0;
 		auto iter_start = nums.begin();
@@ -50,6 +61,7 @@ public:
 
 int main(){
   int init_arr[] = {52,56,12,56,25,12,12};
+  cout << sizeof(init_arr) << endl;
   vector<int> vect(init_arr,init_arr+7);
   Solution so = Solution();
   int result = so.removeElement3(vect,12);

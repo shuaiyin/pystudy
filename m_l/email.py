@@ -15,7 +15,7 @@ def textParse(bigString):
 	"""
 	import re
 	listOfTokens = re.split(r'\W*',bigString)#分隔符是除单词，数字,下划线外的任意字符串,其实就是切分之后只留下字母，数字下划线而已
-	return [tok.lower() for tok in listOfTokens if len(tok) > 2]#这里过滤掉长度小于等于2的单词
+	return [tok.lower() for tok in listOfTokens if len(tok) > 2]#这里过滤掉长度小于less than 2的单词
 
 
 

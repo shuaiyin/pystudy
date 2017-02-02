@@ -1,0 +1,3 @@
+vector is a good container
+xor is good operator,and when the bit0 xor other bit,the result is the other bit 
+
