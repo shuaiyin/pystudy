@@ -1,31 +1,30 @@
 #include<iostream>
-#include<string.h>
+#include<algorithm>
 #include<vector>
-using namespace std; 
+using namespace std;
 
+void test1(){
+	//init a vector 
+	vector<int> v{0,1,2,3,4};
+	int n1 = 3;
+	auto result1 = find(v.begin(),v.end(),n1);
+	if(result1 != v.end()) cout << "v contains " << n1 << endl;
+	else cout << "v not contains " << n1 << endl;
+	//v contains 3
+}
+
+void test2(){
+	//insert test 
+	vector<string> vec{"yin","shuai"};
+	vector<string> toInsert{"good"};
+	toInsert.insert(toInsert.end(),vec.begin(),vec.end());//same as copy one vector to another vector 
+	for(auto val:toInsert){
+		cout << val << endl;
+	}//good yin shuai 
+
+}
 
 int main(){
-
-  // vector<char> testvector = {'a','b','c','d'};
-
-  //first define way 
-  int init_arr[] = {2,25,20,8,9,50};
-  init_arr[6] = 5555;
-  int arr_len = sizeof(init_arr)/sizeof(int);
-  cout << arr_len << endl;
-  cout << *(init_arr+6) << endl;
-  cout << sizeof(init_arr) << endl;
-  return 0;
-  vector<int> init_vector(init_arr,init_arr+arr_len);
-  vector<int>::iterator  iter = init_vector.begin();
-  vector<int>:: iterator new_iter =   init_vector.erase(iter); 
-  cout << *new_iter <<endl;
-  return 0;
-  while(iter != init_vector.end()){
-     cout << *iter++ << endl;
-  }
-  
- 
- 
-  return 0;
+	test2();
+	return 0;
 }

@@ -8,22 +8,24 @@ public:
 		string left = "([{";
 		string right= ")]}";
 		stack<char> stk;
-		for(int i=0;i<s.length();i++){
-			
+		for(int i=0;i<s.length;i++){
+			if(left.find(s[i])){
+				stk.push(s[i]);
+			}else{
+				continue;
+			}
 		}
-
 		return true;
 	}
 };
 
 int main(){
-	string const a = "yinshuai";
-	bool result = a.find('d');
-
-	cout << string::npos << endl;
-	stack<char> stk;
-	for(int i=0;i<a.length();i++){
-		break;
-	}
+	stack<int> stk;
+	stk.push(20);
+	cout << stk.empty() << endl;
+	return 0;
+	Solution so = Solution();
+	const string shuai = "heheda";
+	so.isValid(shuai);
 	return 0;
 }
