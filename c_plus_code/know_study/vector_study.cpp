@@ -23,8 +23,21 @@ void test2(){
 	}//good yin shuai 
 
 }
-
+void test3(){
+	vector<int> vec{1,2,3,4,5};
+	cout << vec.back() << endl;//5
+	for(int val:vec) cout << val << endl;// 1 2 3 4 5
+	vec.pop_back();
+	for(int val:vec) cout << val << endl;//1 2 3 4
+	
+}
+void test4(){
+	vector<int> vec{1,2,3,4,5};
+	for(auto iter=vec.rbegin();iter!=vec.rend();iter++){
+		cout << *iter << endl;
+	}//5 4 3 2  1
+}
 int main(){
-	test2();
+	test4();
 	return 0;
 }

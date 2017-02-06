@@ -48,7 +48,7 @@ void test3(){
 	cout << result << endl;
 }
 
-
++
 
 int main(){
 	test3();

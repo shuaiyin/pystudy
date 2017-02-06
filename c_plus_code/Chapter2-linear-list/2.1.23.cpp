@@ -3,7 +3,7 @@
 #include<string>
 #include<algorithm>
 using namespace std;
-
+//well done 
 class Solution{
 public:
 	int singleNumber(vector<int> &nums){

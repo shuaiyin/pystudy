@@ -98,7 +98,7 @@ void test4(){
 	for(auto it=um.cbegin();it!=um.cend();++it){
 		cout << " " << it->first << ":" << it->second << endl;
 		cout << "size is " << sizeof(it->first) << endl;
-		it->first = "what";
+		// it->first = "what";//wrong
 	}
 	/*
 	um map contains 
@@ -110,12 +110,40 @@ void test4(){
 	cout << itb->first << endl;
 }
 
+void test5(){
+	unordered_map<int,string> um;
+	um = {{1,"2015140920"},{2,"2015140852"},{3,"2015259636"},{4,"2015258963"},
+		  {5,"2015245528"},{6,"2014252369"},{7,"20152589669"}};
+	unordered_map<int,string>::const_iterator it = um.begin();
+	it++;
+	it = um.erase(it);
+	cout << um.size() << endl;//6
+	cout << "value pointer is " << it->first << endl;//5 
+	return;
+	// return;
+}
+
+void test6(){
+	unordered_map<int,string> um;
+	um = {{1,"2015140920"},{2,"2015140852"},{3,"2015259636"},{4,"2015258963"},
+		  {5,"2015245528"},{6,"2014252369"},{7,"20152589669"}};
+	um.erase(3);//erase value by key 
+	for(auto it=um.begin();it!=um.end();it++){
+		cout << it->first << endl;
+	}// 7 6 5 4 2 1  
+}
+
+void test7(){
+	unordered_map<int,string> um;
+	um = {{1,"2015140920"},{2,"2015140852"},{3,"2015259636"},{4,"2015258963"},
+		  {5,"2015245528"},{6,"2014252369"},{7,"20152589669"}};
+	
+}
 
 int main(){
 	// test1();
-	test4();
-
-
+	test7();
+	return 0;
 
 }
 

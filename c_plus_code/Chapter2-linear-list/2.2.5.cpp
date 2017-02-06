@@ -6,37 +6,39 @@ struct ListNode{
 	ListNode *next;
 	ListNode(int x) : val(x),next(NULL){}
 };
-
+//not well done 
 class Solution{
 public:
 	ListNode *deleteDupicates(ListNode *head){
 		if(!head||!head->next) return head;
 		ListNode *p = head->next;
+		if(head->val == p->val){
+			while(p && head->val == p->val){
+				ListNode* tmp = p;
+				p = p->next;
+				delete tmp;
+			}
+			delete head;
+			return deleteDupicates(p);
+		}else{
+			head->next = deleteDupicates(head->next);
+			return head;
+		}
 
 	}
 };
 int main(){
-	ListNode head(-1);
-	ListNode *tmp = &head;
-	tmp->next = new ListNode(10);
-	tmp = tmp->next;
-	tmp->next = new ListNode(11);
-	tmp = tmp->next;
-	tmp->next = new ListNode(11);
-	tmp = tmp->next;
-	tmp->next = new ListNode(12);
-	for(ListNode *prev=&head,*cur=prev->next;cur;cur=cur->next){
-		if(prev->val == cur->val){
-			prev->next = cur->next;
-			cur->next = cur->next->next;
-
-		}
+	ListNode head(0);
+	int testarr[] = {1,2,3,4,5};
+	auto temp = &head;
+	for(auto val:testarr){
+		temp->next = new ListNode(val);
+		temp = temp->next;
 	}
+	auto result = Solution().deleteDupicates(&head);
 
 
-	for(ListNode *cur=&head;cur;cur=cur->next){
-		continue;
-	}
+
 
 	return 0;
 
