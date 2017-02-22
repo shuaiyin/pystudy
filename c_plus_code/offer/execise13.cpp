@@ -26,6 +26,26 @@ public:
 	//delete node with O(1) time complex 
 	void DeleteSpecifyNodeFastMethod(ListNode* head,ListNode* toDeleteNode){
 		if(!head || !toDeleteNode) return;
+		if(head == toDeleteNode){
+			ListNode* headTemp = head;
+			head = head->next;
+			delete headTemp;
+		}
+		if(!toDeleteNode->next){
+			cout << "run there" << endl;
+			ListNode* toDeleteNodeNext = toDeleteNode->next;
+			toDeleteNode->val = toDeleteNode->next->val;
+			toDeleteNode->next = toDeleteNode->next->next;
+			delete toDeleteNodeNext;
+		}else{
+			ListNode* temp = head;
+			while(temp->next != toDeleteNode){
+				temp = temp->next;
+			}
+			temp->next = nullptr;
+			delete toDeleteNode;
+		}
+
 
 	}
 
@@ -40,9 +60,10 @@ int main(){
 		temp = temp->next;
 	}
 	ListNode* head = dummy.next;
-	Solution().DeleteSpecifyNode(head,head);
+	Solution().DeleteSpecifyNodeFastMethod(head,head->next);
 	// cout << temp->next->val << endl;
 	temp = dummy.next;
+	cout << temp->next->next->val << endl;
 	while(temp){
 		cout << temp->val << endl;
 		temp = temp->next;
