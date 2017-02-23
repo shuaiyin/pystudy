@@ -6,6 +6,9 @@ struct ListNode{
 	ListNode* next;
 	ListNode(int x):val(x),next(nullptr){};
 };
+/*
+there is still some pro here 
+*/
 
 class Solution{
 public:

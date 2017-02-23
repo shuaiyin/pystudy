@@ -18,7 +18,8 @@ public:
 		int nLength = strlen(number);
 		cout << nLength << endl;
 		for(int i=nLength-1; i>=0;i--){
-			break;
+			int nSum = number[i] - '0' + nTakeOver;
+			if(i == nLength -1) nSum++;
 		}
 
 		return isOverflow;
