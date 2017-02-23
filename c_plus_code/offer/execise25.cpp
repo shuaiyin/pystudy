@@ -40,7 +40,7 @@ private:
 		if(preFirst != preLast){
 			head->left = reConstructBinaryTree(next(preFirst),next(preFirst,leftLen+1),
 											   inFirst,leftValPos);
-			head->right = reConstructBinaryTree(next(preFirst,leftLen+1),preLast,
+			head->right = reCo	nstructBinaryTree(next(preFirst,leftLen+1),preLast,
 											   next(leftValPos),inLast);
 		}
 		return head;

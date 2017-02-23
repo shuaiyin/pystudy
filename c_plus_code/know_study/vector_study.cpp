@@ -37,7 +37,17 @@ void test4(){
 		cout << *iter << endl;
 	}//5 4 3 2  1
 }
+
+void test5(){
+	vector<int> vec1({1,2,3,4});
+	cout << vec1.size() << endl;//4
+	vec1.resize(10);
+	cout << vec1.size() << endl;//10
+     
+ 
+}
+
 int main(){
-	test4();
+	test5();
 	return 0;
 }

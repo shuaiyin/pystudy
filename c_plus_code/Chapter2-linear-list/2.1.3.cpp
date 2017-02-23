@@ -28,6 +28,61 @@ public:
 
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Solution2{
+public:
+	int search(vector<int>& nums,int target){
+		int first =0,last=nums.size();
+		while(first!=last){
+			const int mid = (first + last)/2;
+			if(nums[mid] == target) return mid;
+			if(nums[mid] > nums[first]){
+				if(target > nums[mid]) first = mid + 1;
+				else last = mid;
+			}else{
+				if(target > nums[mid]) first = mid + 1;
+				else 
+			}
+
+
+
+		}
+	}
+
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int main(){
 	int target = 5;
 	vector<int> vec{4,5,6,7,0,1};
