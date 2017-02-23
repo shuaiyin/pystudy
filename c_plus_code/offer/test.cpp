@@ -5,7 +5,7 @@ using namespace std;
 class Solution{
 public:
 	int Parition(int data[],int length,int start,int end){
-		
+		if(data == NULL||)
 	}
 
 };
