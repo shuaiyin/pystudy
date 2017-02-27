@@ -16,7 +16,7 @@ public:
 		ListNode* pAhead = pListHead;
 		ListNode* pBehind = pListHead;
 		k = k - 1;
-		while(k && pAhead->next){
+		while(k && pAhead->next){//if there is next,then we can step in 
 			pAhead = pAhead->next;
 			k--;
 		}

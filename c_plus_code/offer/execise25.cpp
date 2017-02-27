@@ -26,8 +26,17 @@ public:
 		preOrderTra(head->right);
 	}	
 
+	bool hasPathSum(TreeNode *root, int sum){
+		if(!root) return false;
+		if(!root->left && !root->right) return root->val == sum;
+		return hasPathSum(root->left,sum-root->val) || hasPathSum(root->right,sum-root->val);
+	}
+	//cow net ac .but need more focus 
     vector<vector<int> > FindPath(TreeNode* root,int expectNumber) {
-
+    	vector<vector<int>> result;
+    	vector<int> cur;//center result
+    	FindPath(root,expectNumber,cur,result);
+    	return result;
     }
 
 private:
@@ -40,27 +49,51 @@ private:
 		if(preFirst != preLast){
 			head->left = reConstructBinaryTree(next(preFirst),next(preFirst,leftLen+1),
 											   inFirst,leftValPos);
-			head->right = reCo	nstructBinaryTree(next(preFirst,leftLen+1),preLast,
+			head->right = reConstructBinaryTree(next(preFirst,leftLen+1),preLast,
 											   next(leftValPos),inLast);
 		}
 		return head;
+	}
+
+	void FindPath(TreeNode* root,int expectNumber,vector<int>& cur,vector<vector<int>>& result){
+		if(root == nullptr) return;
+		cur.push_back(root->val);
+		if(root->left == nullptr && root->right == nullptr && root->val == expectNumber) result.push_back(cur);
+		FindPath(root->left,expectNumber-root->val,cur,result);
+		FindPath(root->right,expectNumber-root->val,cur,result);
+		cur.pop_back();
 	}
 
 
 };
 
 
+void testRecurse(int val){
+	if(!val) return;
+	val--;
+	cout << val << endl;
+
+	testRecurse(val);
+	testRecurse(val);
+	cout << endl;
+
+}
+
 int main(){
-
-
-
-
-
-	vector<int> preorder({1,2,4,5,7,10,8,3,6,9});
-	vector<int> inorder({4,2,10,7,5,8,1,6,9,3});
-	auto ret = Solution().reConstructBinaryTree(preorder,inorder);
+	testRecurse(4);
 	return 0;
 
+
+
+	vector<int> preorder({1,2,4,8,12,3,6,11});
+	vector<int> inorder({8,4,2,12,1,6,3,11});
+	auto ret = Solution().reConstructBinaryTree(preorder,inorder);
+	auto vecRet = Solution().FindPath(ret,15);
+	for(auto vecval:vecRet){
+		for(auto val:vecval) cout << val << ' ';
+		cout << endl;
+	}
+	return 0;
 	deque<int> dequeTest({1,2,3,4,5});
 	dequeTest.push_back(6);
 	cout << "the size is  " << dequeTest.size() << endl;

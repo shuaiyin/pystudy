@@ -1,7 +1,7 @@
 #include<iostream>
 using namespace std;
 
-
+//cow net work ac 
 class Solution{
 public:
 	bool g_InvaidInput = false;
@@ -13,7 +13,7 @@ public:
 		}
 		unsigned int absExponent = (unsigned int)(exponent);
 		if(exponent < 0) absExponent = (unsigned int)(-exponent);
-		double result = PowerWithUnsignedExponent(base,absExponent);
+		double result = PowerWithUnsignedExponentFastest(base,absExponent);
 		if(exponent < 0)
 			result = 1.0/result;
 		return result;

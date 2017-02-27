@@ -9,7 +9,11 @@ public:
 		auto matrixSize = matrix.size();//row num 
 		auto matrixColumn = matrix[0].size();
 		int circleCount = 0;
-		while()
+		int matrixSizeTemp = matrixSize;
+		int matrixColumnTemp = matrixColumn;
+		while(matrixSizeTemp>=1 && matrixColumnTemp >=1){
+			circleCount
+		}
 		// int circleCount = abs()
 		return vector<int>();
 

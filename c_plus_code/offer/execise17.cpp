@@ -10,7 +10,8 @@ struct ListNode{
 
 class Solution{
 public:
-	ListNode* MergeLinkList(ListNode* pHead1,ListNode* pHead2){
+	//iterator method  cow net ac 
+	ListNode* Merge(ListNode* pHead1,ListNode* pHead2){
 		if(!pHead2) return pHead1;
 		if(!pHead1) return pHead2;
 		ListNode dummy(-1);
@@ -41,6 +42,9 @@ public:
 		}
 		return dummy.next;
 	}
+	//recurse method has not yet 
+
+
 };
 
 int main(){
