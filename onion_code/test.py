@@ -200,7 +200,7 @@ def draw_pic(figsizex,figsizey,draw_dict,color_count,ylimt_bot,ylim_top):
 	plt.show()
 
 
-ONION_DIR_PATH = './oresp/'
+ONION_DIR_PATH = '/home/yinshuai/oresp/'
 NEED_INIT_MYSQL_DATA = False #judge if need reinit the data 
 ALL_DATA_DRAW = False#
 STAT_START_TIME = "2017-02-10 00:00:00"
