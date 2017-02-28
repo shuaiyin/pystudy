@@ -129,7 +129,23 @@ void test12(){
 
 
 
+
+//////////////////////////////  the next string study is more about string in pure c  ///////////////////////////////////
+void test13(){
+    const char* s = "this is the test string in pure c ";
+    cout << s << endl;//this is the test string in pure c
+    while(*s != '\0'){
+        cout << *s;
+        s++;
+    }"this is the test string in pure c ";
+    cout << endl;
+
+
+}
+
+
+
 int main(){
-    test12();
+    test13();
 	return 0;
 }
