@@ -201,10 +201,10 @@ def draw_pic(figsizex,figsizey,draw_dict,color_count,ylimt_bot,ylim_top):
 
 
 ONION_DIR_PATH = '/home/yinshuai/oresp/'
-NEED_INIT_MYSQL_DATA = False #judge if need reinit the data 
-ALL_DATA_DRAW = False#
-STAT_START_TIME = "2017-02-10 00:00:00"
-STAT_END_TIME  = "2017-02-28 00:00:00"
+NEED_INIT_MYSQL_DATA = False #judge if need reinit the data,default not use,but if you add new onon data.you should reinit the data in db 
+DATA_DRAW = 3#control data draw with default value 0  
+STAT_START_TIME = "2017-02-10 00:00:00"#start time to statistic
+STAT_END_TIME  = "2017-02-28 00:00:00"#end time to statistic 
 
 
 conn= MySQLdb.connect(
@@ -333,13 +333,19 @@ for key in stat_data:
 	print key,stat_data[key]
 """
 # print 'ddd'
-if ALL_DATA_DRAW:
+if DATA_DRAW == 1:#draw pic use all data 
 	draw_pic(100,200,stat_data,21,2000,50000)
-else:
+elif DATA_DRAW == 2:#draw pic use all data except for sum_stat and distinct_sum_stat 
 	del stat_data['distinct_sum_stat']
 	del stat_data['sum_stat']
 	draw_pic(100,200,stat_data,21,100,5000)
 
+elif DATA_DRAW == 3:#draw pic use just sum_stat and distinct_sum_stat 
+	stat_data_new = {}
+	stat_data_new['sum_stat'] = stat_data['sum_stat']
+	stat_data_new['distinct_sum_stat'] = stat_data['distinct_sum_stat']
+	stat_data_new['xval'] = stat_data['xval']
+	draw_pic(100,200,stat_data_new,21,5000,50000)#ylim from 5000 to 50000 
 
 
 
