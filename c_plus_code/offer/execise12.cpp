@@ -6,6 +6,27 @@ using namespace std;
 class Solution{
 public:
 	void PrintToMaxOfNDigits(int n){
+		return;
+	}
+
+};
+
+int main(){
+	const char* s = "this is a good school ";
+	while(*s != '\0'){
+		cout << *s << endl;
+		s++;
+	}
+	// cout << s << endl;
+
+	return 0;
+}
+
+
+
+/*
+
+	void PrintToMaxOfNDigits(int n){
 		if(n <= 0) return;
 		char * number = new char[n+1];
 		memset(number,'0',n);
@@ -25,26 +46,6 @@ public:
 		return isOverflow;
 
 	}
-};
-
-int main(){
-	char* mychar = new char[4];
-	memset(mychar,'9',3);
-	mychar[3] = '\0';
-	Solution().Increment(mychar);
-	char a = '3';
-	char b = a - 300;
-	b = b & 0x7F;
-	// int c  = int(b);
-	cout << b << endl;
-	return 0;
-	// Solution().PrintToMaxOfNDigits(999);
-	char* number = new char[999999999];
-	memset(number,'0',3);
-	number[3] = '\0';
-	cout << number << endl;
-	while(1);
 
 
-	return 0;
-}
+*/
