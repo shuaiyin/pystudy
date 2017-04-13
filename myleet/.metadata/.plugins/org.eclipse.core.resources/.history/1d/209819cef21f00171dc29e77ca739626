@@ -1,0 +1,12 @@
+package Problem;
+
+public class Solution {
+	/**
+	 * 头插法创建链表
+	 * @param values
+	 * @return
+	 */
+	public ListNode contructList(int[] values){
+		
+	}
+}

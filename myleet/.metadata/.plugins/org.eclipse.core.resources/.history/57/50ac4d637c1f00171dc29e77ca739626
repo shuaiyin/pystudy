@@ -1,0 +1,112 @@
+package highaccuracy;
+
+/**
+step1:高精度输入参数是否需要转置？
+
+       对于链表来说可以使用自定义反转函数进行反转
+
+       对于字符串来说由于有索引，所以可以不必反转，直接利用反向索引。 
+
+    ﻿   如果有必要反转的话，请将反转函数独立出来。
+
+step2:声明新的字符串或者链表头结点
+
+       对于链表来说，声明新链表的时候采用一个辅助头节点可以大大减少出错率。
+
+       对于字符串来说，声明的时候采用StringBuffer而不是String，这样可以提高串拼接速度。
+
+step3: 设置进位参数
+
+      ﻿ 通常需要设置一个int类型的进位参数，起名可以用carry
+
+step4: 编写循环语句
+       循环结束条件一般为输入的两个参数的未全部失效
+     ﻿  循环主体中要对这两个参数是否失效做判断。
+
+step5: 不要忘记最后的进位。
+
+参考题目：
+
+Leetcode    445     2   415  参考代码见package highaccuracy
+ */
+
+class ListNode{
+	int val;
+	ListNode next;
+	public ListNode(int x){
+		this.val = x;
+	}
+}
+
+
+public class Solution {
+    //----- leetcode 445 ac  04-10
+    public ListNode addTwoNumbers1(ListNode l1, ListNode l2) {
+    	if(l1 == null) return l2;
+    	if(l2 == null) return l1;
+    	ListNode newL1 = reverse(l1);
+    	ListNode newL2 = reverse(l2);
+    	////辅助节点,这个辅助节点很重要，因为它可以节省下新链初始节点为空的判定
+    	ListNode dummy = new ListNode(-1);
+    	ListNode resultL = dummy;//
+    	int carry = 0;
+    	while(newL1 != null || newL2 != null){
+    		int val1 = newL1 == null ? 0 : newL1.val;
+    		int val2 = newL2 == null ? 0 : newL2.val;
+    		int val = (val1 + val2 + carry)%10;
+    		carry = (val1 + val2 + carry)/10;
+			resultL.next = new ListNode(val);
+			resultL = resultL.next;
+    		if(newL1 != null) newL1 = newL1.next;
+    		if(newL2 != null) newL2 = newL2.next;
+    	}
+    	if(carry > 0) resultL.next = new ListNode(carry);///
+        return reverse(dummy.next);
+    }
+    
+    	//反转也是有门道的
+        public ListNode reverse(ListNode head){
+    	if(head == null || head.next == null) return head;
+    	ListNode preNode = head;
+    	ListNode nextNode = head.next;
+    	while(nextNode != null){
+    		ListNode temp = nextNode.next;
+    		nextNode.next = preNode;
+    		preNode = nextNode;
+    		nextNode = temp;
+    	}
+    	head.next = null;
+    	return preNode;
+    }
+        
+    //leetcode 2  ac 0410 
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    	int carry = 0;
+    	ListNode dummy = new ListNode(-1);//定义存储新的结果
+    	ListNode sumNode = dummy;//临时缓存
+        while(l1 != null || l2 != null){
+        	int listOneVal = l1 != null ? l1.val : 0;
+        	int listTwoVal = l2 != null ? l2.val : 0;
+        	int sum = listOneVal + listTwoVal + carry;
+        	sumNode.next = new ListNode(sum%10);
+        	sumNode = sumNode.next;
+        	carry = sum/10;
+        	if(l1 != null) l1 = l1.next;
+        	if(l2 != null) l2 = l2.next;
+        }
+        if(carry != 0) sumNode.next = new ListNode(carry);
+        return dummy.next;
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
+

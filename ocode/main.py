@@ -1,10 +1,14 @@
+# -*- coding: utf-8 -*-
 import os 
 import time 
 import datetime 
 import sys 
-# -*- coding: utf-8 -*-
+
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
+from pylab import *
+
+
 import MySQLdb
 
 #four fields  pk,ip getdatetime,getstamp,onion_addr
@@ -179,7 +183,7 @@ def choose_some_color(cnames,count):
 			color_list.append(color)
 	return color_list
 
-def draw_pic(figsizex,figsizey,draw_dict,color_count,ylimt_bot,ylim_top):
+def draw_pic(figsizex,figsizey,draw_dict,color_count,ylimt_bot,ylim_top,title="this is the title",xlabel="this is xlabel",ylabel="this is y label"):
 	print draw_dict
 	plt.figure(figsize=(figsizex,figsizey))
 	x = draw_dict['xval']
@@ -189,22 +193,34 @@ def draw_pic(figsizex,figsizey,draw_dict,color_count,ylimt_bot,ylim_top):
 	for key in draw_dict:
 		print "the length of y is " + str(len(draw_dict[key]))
 		if key == 'xval': continue
-		linewidth = 4 if key in ('sum_stat','distinct_sum_stat') else 2
+		linewidth = 4 if key in ('totalStatistic','totalDistinctStatistic') else 2
 		y = draw_dict[key]
 		print y
 		plt.gcf().autofmt_xdate()#make x datetime show beautiful
-		plt.plot(x,y,color=color_list[color_num],label=key,linewidth=linewidth)
+		try:
+			plt.plot(x,y,color=color_list[color_num],label=key,linewidth=linewidth)
+		except Exception,e:
+			print e
+
 		color_num += 1 
 	plt.ylim(ylimt_bot,ylim_top)#set the limit of y xlia 
 	plt.legend(loc="top left",shadow=True)#set the tuli 
+	plt.rcParams['font.sans-serif'] = ['SimHei'] #指定默认字体
+	plt.title(title)
+	plt.xlabel(xlabel)
+	plt.ylabel(ylabel)
+
+	# plt.savefig("./a.png")
 	plt.show()
 
 
-ONION_DIR_PATH = '/home/yinshuai/oresp/'
-NEED_INIT_MYSQL_DATA = False #judge if need reinit the data,default not use,but if you add new onon data.you should reinit the data in db 
-DATA_DRAW = 3#control data draw with default value 0  
-STAT_START_TIME = "2017-02-10 00:00:00"#start time to statistic
-STAT_END_TIME  = "2017-02-28 00:00:00"#end time to statistic 
+ONION_DIR_PATH = '/home/yinshuai/onion0407/'
+NEED_INIT_MYSQL_DATA = False#judge if need reinit the data,default not use,but if you add new onon data.you should reinit the data in db 
+DATA_DRAW = 2#control data draw with default value 0  
+STAT_START_TIME = "2017-02-01 00:00:00"#start time to statistic
+STAT_END_TIME  = "2017-04-07 00:00:00"#end time to statistic 
+
+
 
 
 conn= MySQLdb.connect(
@@ -299,15 +315,15 @@ while temp_timestamp < end_timestamp:
 	stat_data['xval'].append(stamp_to_Ymd(temp_timestamp))
 	#sum num
 	sql = "select count(*) from ONION where getstamp <%s" % (temp_timestamp)
-	stat_data.setdefault('sum_stat',[])
+	stat_data.setdefault('totalStatistic',[])
 	cur.execute(sql)
 	sum_num = cur.fetchone()[0]
-	stat_data['sum_stat'].append(sum_num)
+	stat_data['totalStatistic'].append(sum_num)
 	#distinct sum num 
 	sql = "select count(distinct onion_addr) from ONION where getstamp<%s" % (temp_timestamp)
-	stat_data.setdefault('distinct_sum_stat',[])
+	stat_data.setdefault('totalDistinctStatistic',[])
 	cur.execute(sql)
-	stat_data['distinct_sum_stat'].append(cur.fetchone()[0])
+	stat_data['totalDistinctStatistic'].append(cur.fetchone()[0])
 
 	for ip in ip_list:
 		sql = "select count(*) from ONION where ip='%s' and ip_class='%s' and getstamp<%s" % (ip[0],'A',temp_timestamp)
@@ -334,18 +350,37 @@ for key in stat_data:
 """
 # print 'ddd'
 if DATA_DRAW == 1:#draw pic use all data 
-	draw_pic(100,200,stat_data,21,2000,50000)
-elif DATA_DRAW == 2:#draw pic use all data except for sum_stat and distinct_sum_stat 
-	del stat_data['distinct_sum_stat']
-	del stat_data['sum_stat']
-	draw_pic(100,200,stat_data,21,100,5000)
+	draw_pic(100,200,stat_data,21,2000,10000)
+elif DATA_DRAW == 2:#draw pic use all data except for totalStatistic and totalDistinctStatistic 
+	del stat_data['totalDistinctStatistic']
+	del stat_data['totalStatistic']
+	draw_pic(100,200,stat_data,21,100,8000)
 
-elif DATA_DRAW == 3:#draw pic use just sum_stat and distinct_sum_stat 
+elif DATA_DRAW == 3:#draw pic use just totalStatistic and totalDistinctStatistic    important 
 	stat_data_new = {}
-	stat_data_new['sum_stat'] = stat_data['sum_stat']
-	stat_data_new['distinct_sum_stat'] = stat_data['distinct_sum_stat']
+	stat_data_new['totalStatistic'] = stat_data['totalStatistic']
+	stat_data_new['totalDistinctStatistic'] = stat_data['totalDistinctStatistic']
 	stat_data_new['xval'] = stat_data['xval']
-	draw_pic(100,200,stat_data_new,21,5000,50000)#ylim from 5000 to 50000 
+	draw_pic(100,200,stat_data_new,21,5000,178000,title="(Distinct) Total onion address plot",ylabel="Onion address count",xlabel="Datetime")#ylim from 5000 to 50000 
+
+elif DATA_DRAW == 4:#draw all data simple from some ip .  important 
+	draw_data = {}
+	draw_data['xval'] = stat_data['xval']
+	draw_data['NodeA'] = stat_data['47.88.18.218A']
+	draw_data['NodeB'] = stat_data['47.88.18.218B']
+	draw_data['NodeC'] = stat_data['47.88.12.14A']
+	draw_data['NodeD'] = stat_data['47.88.12.14B']
+	draw_pic(100,200,draw_data,21,100,8800,title="Total onion address of seperate inject node",xlabel="Datetime",ylabel="Onion address count")
+
+elif DATA_DRAW == 5:#draw difference of total (distinct) for each day 
+	stat_data_new = {}
+	stat_data_new['Difference'] = []
+	statLen = len(stat_data['totalStatistic'])
+	for index in xrange(statLen):
+		stat_data_new['Difference'].append(stat_data['totalStatistic'][index] - stat_data['totalDistinctStatistic'][index])
+	stat_data_new['xval'] = stat_data['xval']
+	draw_pic(100,200,stat_data_new,21,0,65000,title="The Difference between origin onion address and distinct onion address", \
+			 xlabel="Datetime",ylabel="Onion address count")
 
 
 

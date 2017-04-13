@@ -61,3 +61,7 @@ yinshuai: the size of receive buffer is 16 bytes ,so it can only receive 16 byte
 
 
 
+create table goods(
+  id int auto_increment primary key,
+  goods_name varchar(30) not null default ''
+)engine innodb charset utf8;

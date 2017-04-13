@@ -5,15 +5,12 @@ using namespace std;
 
 class Solution{
 public:
+	bool g_InvalidInput = false;
     int FindGreatestSumOfSubArray(vector<int> array) {
+    	if(array.empty() ||)
     	int greatestSum = 0;
     	int beforeAddSum = 0;
     	for(int val:array){
-    		beforeAddSum = greatestSum;
-    		greatestSum += val;
-    		if(beforeAddSum > greatestSum){
-    			greatestSum = val;
-    		}
 
     	}
     	return 0;

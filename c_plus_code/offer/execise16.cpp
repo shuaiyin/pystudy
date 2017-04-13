@@ -10,6 +10,80 @@ struct ListNode{
 //cow net ac
 class Solution {
 public:
+	ListNode* ReverseList(ListNode* pHead) {
+		if(pHead == nullptr || pHead->next == nullptr) return pHead;
+		ListNode* prev = nullptr,*pcur = pHead;
+		while(pcur){
+			ListNode* ptmp = pcur->next;
+			pcur->next = prev;
+			prev = pcur;
+			pcur = ptmp;
+		}
+		return prev;
+    }
+};
+
+int main(){
+	ListNode dummy(-1);
+	ListNode* temp = &dummy;
+	for(int i=0;i<10;i++){
+		temp->next = new ListNode(i);
+		temp = temp->next;
+	}
+	auto ret = Solution().ReverseList(dummy.next);
+	// auto ret = dummy.next;
+	while(ret){
+		cout << ret->val << endl;
+		ret = ret->next;
+	}
+
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
     ListNode* ReverseList(ListNode* pHead) {
     	if(!pHead) return nullptr;
     	if(!pHead->next) return pHead;
@@ -25,20 +99,4 @@ public:
     	return pA;
 
     }
-};
-
-int main(){
-	ListNode dummy(-1);
-	ListNode* temp = &dummy;
-	for(int i=0;i<1;i++){
-		temp->next = new ListNode(i);
-		temp = temp->next;
-	}
-	auto ret = Solution().ReverseList(dummy.next);
-	while(ret){
-		cout << ret->val << endl;
-		ret = ret->next;
-	}
-
-	return 0;
-}
+*/

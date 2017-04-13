@@ -1,0 +1,23 @@
+package Problem;
+
+class ListNode{
+	int val;
+	ListNode next;
+	ListNode(int x){
+		this.val = x;
+	}
+}
+
+public class Solution {
+	/**
+	 * 头插法创建链表
+	 * @param values
+	 * @return
+	 */
+	public ListNode contructList(int[] values){
+		ListNode head = new ListNode(values[0]);//新建头node
+		for(int i=1;i< values.length;i++){
+			
+		}
+	}
+}

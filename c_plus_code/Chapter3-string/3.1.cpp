@@ -4,22 +4,76 @@
 using namespace std;
 class Solution{
 public:
+	//self ac 0301
 	bool isPalindrome(string s){
+		bool result = true;
+		if(s.empty()) return true;
 		transform(s.begin(),s.end(),s.begin(),::tolower);
-		auto left = s.begin(),right=prev(s.end());
-		while(left <right){//如果参数是数字或字母字符，函数返回非零值，否则返回零值
-			if(!isalnum(*left)) ++left;
-			else if(!isalnum(*right)) --right;
-			else if(*left != *right) return false;
-			else{
-				left++,right--;
+		string::iterator pBegin = s.begin(),pEnd = prev(s.end());
+		while(pBegin < pEnd){
+			if(!isalnum(*pBegin)) pBegin++;
+			else if(!isalnum(*pEnd)) pEnd--;
+			else if (*pBegin != *pEnd){
+				result = false;
+				break;
+			}else{
+				pBegin++;
+				pEnd--;
 			}
 		}
-		return true;
+		return result;
+
 	}
 
-
 };
+
+
+
+
+
+
+
+
+
+
+
+int main(){
+	string testString("A man  ,a plan, a canal:Panama");
+	testString = "Live on evasions? No I save no evil.";
+	auto ret = Solution().isPalindrome(testString);
+	cout << ret << endl;
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
 
 void test3(){
 	string s = "god live no tips";
@@ -117,3 +171,6 @@ int main(){
 
 	return 0;
 }
+
+
+*/

@@ -4,24 +4,32 @@ using namespace std;
 
 //well done 
 class Solution{
-public:
-	string longestCommonPrefix(vector<string> &strs){
-		if(strs.empty()) return "";
-		for(int idx=0;idx<strs[0].size();idx++){
-			for(int i=1;i<strs.size();++i){
-				if(strs[i][idx] != strs[0][idx])
-					return strs[0].substr(0,idx);
-			}
-		}
-		return strs[0];
-	}
 
+public:
+	//self ac 0301 
+	string longestCommonPrefix(vector<string> &strs){
+		if(strs.empty()) return string();
+		auto firstStringSize = strs[0].size();
+		auto vecSize = strs.size();
+		int i,j;
+		for(i=0;i<firstStringSize;i++){
+			for(j=0;j<vecSize;j++){
+				if(strs[j][i] != strs[0][i]){	
+ 					break;
+				}
+			}
+			if(j != vecSize) break;
+
+		}
+		return strs[0].substr(0,i);
+	}
 
 };
 
 
 int main(){
-	string dd("yins");
-	cout << dd.substr(1,2) << endl;
+	vector<string> vec({"yinshuai","yinshuang","yinna"});
+	auto ret = Solution().longestCommonPrefix(vec);
+	cout << ret << endl;
 	return 0;
 }

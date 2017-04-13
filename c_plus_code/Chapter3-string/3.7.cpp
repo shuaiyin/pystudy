@@ -7,15 +7,50 @@ public:
 		return isMatch(s.c_str(),p.c_str());
 	}
 
-private:
 	bool isMatchYs(const char* s,const char* p){
 		bool star = false;
 		const char* str=s,*ptr=p;
+		while(*ptr != '\0'){
+			switch(*ptr){
+				case '?':
+					ptr++;
+					str++;
+					break;
+				case '*':
+					while(*ptr != '*') ptr++;
+
+			}
+
+		}
 
 		return true;
-
-
 	}
+
+
+
+private:
+
+
+	bool isMatchReverse(const char* s,const char* p){
+		if(*p =='*'){
+			while(*p == '*') p++;
+			if(*p == '\0') return true;
+			while(*s != '\0' && !isMatchReverse(s,p)) s++;
+			return *s != '\0'; 
+		}else if(*p == '\0' || )
+		return true;
+	}
+
+
+
+
+
+
+
+
+
+
+
 
 	bool isMatch(const char *s, const char *p){
 		bool star = false;
@@ -51,7 +86,7 @@ private:
 int main(){
 	const char* tests = "abc";
 	const char* testp = "*?c";
-	Solution().isMatch(tests,testp);
+	Solution().isMatchYs(tests,testp);
 	return 0;
 	int a = 3;
 	switch(a){

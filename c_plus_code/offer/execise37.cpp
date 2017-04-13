@@ -12,7 +12,7 @@ struct ListNode{
 
 class Solution{
 public:
-	//using stack  cow net ac 
+	//using stack  cow net ac 0225
     ListNode* FindFirstCommonNodeUsingStack( ListNode* pHead1, ListNode* pHead2) {
     	if(!pHead2 || !pHead1) return nullptr;
     	stack<ListNode*> stk1;//save first link 
@@ -39,7 +39,7 @@ public:
     	return commonNode;
     }
 
-    //using num count 
+    //using num count cow net ac 0225
     ListNode* FindFirstCommonNodeUsingCount(ListNode* pHead1,ListNode* pHead2){
     	if(!pHead1 || !pHead2) return nullptr;
     	ListNode* pHead1Temp = pHead1,*pHead2Temp = pHead2;
@@ -72,7 +72,6 @@ public:
     		}
     	}
     	return pHead1Temp;
-
 
     }
 

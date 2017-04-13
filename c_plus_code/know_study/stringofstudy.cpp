@@ -139,13 +139,74 @@ void test13(){
         s++;
     }"this is the test string in pure c ";
     cout << endl;
+}
 
+void test14(){
+    string s;
+    cin >> s;//yinshuai good day
+    cout << s << endl;//yinshuai
+}
 
+void test15(){
+    string testStr = "yinshuai today is a good day!!!";
+    int punctCnt = 0;
+    for(auto charVal:testStr){
+        if(ispunct(charVal)) punctCnt++;
+    }
+    cout << punctCnt << endl;//3   get the number of punct 
+
+    string otherStr = "Today is A GOOD day";
+    for(size_t i=0;i<otherStr.size();i++){
+        otherStr[i] = tolower(otherStr[i]);
+    }
+    for(auto charVal:otherStr) cout << charVal;//today is a good day
 }
 
 
+void test16(){//string find operation
+    string s = "yinshuai today is a good day";
+    string::size_type val = s.rfind(" ");
+    if(val == string::npos) cout << "not found";
+    else cout << "the index of finding word is " << val << endl;//24
+
+}
+
+void test17(){
+    string numberics("0123456789");
+    string name("r2d2");
+    string::size_type pos = name.find_first_of(numberics);
+    if(pos != string::npos)
+         cout << "found number at index: " << pos
+            << " element is " << name[pos] << endl;
+    //found number at index: 1 element is 2
+    string::size_type pos_last = name.find_last_of(numberics);
+    if(pos_last != string::npos)
+        cout << "found number at index: " << pos_last
+             << " element is " << name[pos_last] << endl;
+
+    // found number at index: 3 element is 2
+}
+bool isAa(char a){
+    if(a == 'a') return true;
+    else return false;
+}
+
+void test18(){
+    string testStr = "yin shuai Good Day";
+    string::iterator  iter = find_if(testStr.begin(),testStr.end(),isAa);//return iterator ?
+    cout << *iter << endl;
+
+    string::iterator iter1 = find_if_not(testStr.begin(),testStr.end(),::isalpha);
+    cout << *iter1 << endl;//space 
+    return;
+}
+
+
+//http://simongui.github.io/2016/12/02/improving-cache-consistency.html
+
 
 int main(){
-    test13();
+
+    test18();
 	return 0;
 }

@@ -1,0 +1,7 @@
+package Problem;
+
+public class Solution {
+	public ListNode contructList(int[] values){
+		
+	}
+}

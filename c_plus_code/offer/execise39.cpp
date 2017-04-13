@@ -13,28 +13,9 @@ struct TreeNode{
 
 class Solution {
 public:
-		//judge wheather balance binary tree this part do not ac 
-    bool IsBalanced_SolutionRecurse(TreeNode* pRoot) {
-    	if(!pRoot) return true;
-    	int leftDepth = TreeDepth(pRoot->left);
-    	int rightDepth = TreeDepth(pRoot->right);
-    	int diff = leftDepth - rightDepth;
-    	if(diff > 1 || diff < -1) 
-    		return false;
-    	return IsBalanced_SolutionRecurse(pRoot->left) && IsBalanced_SolutionRecurse(pRoot->right);
+	bool IsBalanced_Solution(TreeNode* pRoot) {
+		if(pRoot == nullptr) return true;
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
     TreeNode* reConstructBinaryTree(vector<int>& pre,vector<int>& vin) {
     	if(pre.empty() && vin.empty()) return nullptr;
@@ -49,7 +30,8 @@ public:
 		preOrderTra(head->right);
 	}	
 
-	//cow net ac 0225
+
+		//cow net ac 0225
 	int TreeDepthRecurse(TreeNode* pRoot){
 		if(!pRoot) return 0;
 		if(!pRoot->left && !pRoot->right){//leaf node 
@@ -60,7 +42,6 @@ public:
 		int maxLen = leftDepth > rightDepth ? leftDepth:rightDepth;
 		return maxLen;
 	}
-
 
 
 

@@ -1,0 +1,24 @@
+package Topic;
+
+public class CollidingPointerTopic {
+
+	
+    //---leetcode 167. Two Sum II - Input array is sorted ac 0412  44.34%
+	//排好顺序的话，那么用碰撞指针是很好的。
+    public int[] twoSum1(int[] numbers, int target) {
+        int[] res = new int[2];
+        int first = 0,last = numbers.length-1;
+        while(first < last ){
+        	int sum = numbers[first] + numbers[last];
+        	if(sum == target){
+        		res[0] = first + 1;
+        		res[1] = last + 1;
+        		break;
+        	}else if(sum > target) last--;
+        	else first++;
+        }
+        return res;
+    }
+    
+    
+}
