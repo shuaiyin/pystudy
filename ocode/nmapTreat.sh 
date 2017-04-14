@@ -1,0 +1,22 @@
+#!/bin/bash  
+declare -i i=1
+declare -i index=1
+for file in  /home/yinshuai/onionFolder/*
+do 
+  proxychains4 nmap --open     -p 80,22,443,11009,4050,6667,8080,25,5222 -iL $file  -oX /home/yinshuai/portResult/result$index.xml  & 
+  let ++index
+done
+  # 
+
+# 代码解析：
+
+# nmap中 -iL 指令指的是从文件中读入onion地址
+
+# 这里的 -oX 用来配置输出xml文件
+
+# 这里的 & 表示并发执行
+
+# 这里的--open表示只存储扫描出来的port 和host。当然，如果host一个开放端口都没有的话，那么文件里面不会有任何显示。
+
+# 这里的主要思路还是将10万多个oinon地址按照每个文件分割1000个然后用 nmap并发执行。 
+
