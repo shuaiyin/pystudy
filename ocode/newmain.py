@@ -215,9 +215,9 @@ def draw_pic(figsizex,figsizey,draw_dict,color_count,ylimt_bot,ylim_top,title="t
 
 ONION_DIR_PATH = '/home/yinshuai/oresp0310/'
 NEED_INIT_MYSQL_DATA = False #judge if need reinit the data,default not use,but if you add new onon data.you should reinit the data in db 
-DATA_DRAW = 2#control data draw with default value 0  
+DATA_DRAW = 1#control data draw with default value 0  
 STAT_START_TIME = "2017-02-10 00:00:00"#start time to statistic
-STAT_END_TIME  = "2017-04-06 00:00:00"#end time to statistic 
+STAT_END_TIME  = "2017-04-20 00:00:00"#end time to statistic 
 
 
 
