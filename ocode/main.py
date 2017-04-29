@@ -214,11 +214,13 @@ def draw_pic(figsizex,figsizey,draw_dict,color_count,ylimt_bot,ylim_top,title="t
 	plt.show()
 
 
-ONION_DIR_PATH = '/home/yinshuai/onionresp0421/onion0421/'
+
+
+ONION_DIR_PATH = '/home/yinshuai/onion0428/'
 NEED_INIT_MYSQL_DATA = False#judge if need reinit the data,default not use,but if you add new onon data.you should reinit the data in db 
-DATA_DRAW = 2#control data draw with default value 0  
+DATA_DRAW = 5#control data draw with default value 0  
 STAT_START_TIME = "2017-02-01 00:00:00"#start time to statistic
-STAT_END_TIME  = "2017-04-21 00:00:00"#end time to statistic 
+STAT_END_TIME  = "2017-04-28 00:00:00"#end time to statistic 
 
 
 
@@ -361,7 +363,7 @@ elif DATA_DRAW == 3:#draw pic use just totalStatistic and totalDistinctStatistic
 	stat_data_new['totalStatistic'] = stat_data['totalStatistic']
 	stat_data_new['totalDistinctStatistic'] = stat_data['totalDistinctStatistic']
 	stat_data_new['xval'] = stat_data['xval']
-	draw_pic(100,200,stat_data_new,21,5000,228000,title="(Distinct) Total onion address plot",ylabel="Onion address count",xlabel="Datetime")#ylim from 5000 to 50000 
+	draw_pic(100,200,stat_data_new,21,5000,238000,title="(Distinct) Total onion address plot",ylabel="Onion address count",xlabel="Datetime")#ylim from 5000 to 50000 
 
 elif DATA_DRAW == 4:#draw all data simple from some ip .  important 
 	draw_data = {}
@@ -370,7 +372,7 @@ elif DATA_DRAW == 4:#draw all data simple from some ip .  important
 	draw_data['NodeB'] = stat_data['47.88.18.218B']
 	draw_data['NodeC'] = stat_data['47.88.12.14A']
 	draw_data['NodeD'] = stat_data['47.88.12.14B']
-	draw_pic(100,200,draw_data,21,100,11800,title="Total onion address of seperate inject node",xlabel="Datetime",ylabel="Onion address count")
+	draw_pic(100,200,draw_data,21,100,12000,title="Total onion address of seperate inject node",xlabel="Datetime",ylabel="Onion address count")
 
 elif DATA_DRAW == 5:#draw difference of total (distinct) for each day 
 	stat_data_new = {}
@@ -379,7 +381,7 @@ elif DATA_DRAW == 5:#draw difference of total (distinct) for each day
 	for index in xrange(statLen):
 		stat_data_new['Difference'].append(stat_data['totalStatistic'][index] - stat_data['totalDistinctStatistic'][index])
 	stat_data_new['xval'] = stat_data['xval']
-	draw_pic(100,200,stat_data_new,21,0,81000,title="The Difference between origin onion address and distinct onion address", \
+	draw_pic(100,200,stat_data_new,21,0,90000,title="The Difference between origin onion address and distinct onion address", \
 			 xlabel="Datetime",ylabel="Onion address count")
 
 

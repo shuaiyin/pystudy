@@ -154,6 +154,10 @@ for key in cnames:
 
 
 
+
+
+
+
 def draw_pic(figsizex,figsizey,draw_dict):
 	print draw_dict
 	plt.figure(figsize=(figsizex,figsizey))
@@ -173,6 +177,49 @@ def draw_pic(figsizex,figsizey,draw_dict):
 	plt.ylim(2000,50000)#set the limit of y xlia 
 	plt.legend(loc="top left",shadow=True)#set the tuli 
 	plt.show()
+
+
+
+import matplotlib.pyplot as plt
+plt.rcdefaults()
+import numpy as np
+import matplotlib.pyplot as plt
+
+service_port = ('80:http','8080','https:443','ssh:22','smtp:25','xmpp:5222','tor-chat:11009','irc:6667')
+y_pos = np.arange(len(service_port))
+count = np.array([301,2,22,62,4,5,4,3])
+plt.barh(y_pos,count,align='center',alpha=0.4)
+plt.xlabel('Number of hidden services per type')
+plt.title('Number statistics for each type of hidden service')
+plt.yticks(y_pos,service_port)
+plt.show()
+# plt.savefig("barh.jpg",format="jpg")
+
+# 80:95
+# 22:24
+# 443:8c
+# 11009:1
+# 4050:0
+# 6667:1
+# 8080:0
+# 25:5
+# 5222:3
+
+sys.exit(0)
+# Example data
+people = ('Tom', 'Dick', 'Harry', 'Slim', 'Jim')
+y_pos = np.arange(len(people))
+performance = 3 + 10 * np.random.rand(len(people))
+error = np.random.rand(len(people))
+
+plt.barh(y_pos, performance, xerr=error, align='center', alpha=0.4)
+plt.yticks(y_pos, people)
+plt.xlabel('Performance')
+plt.title('How fast do you want to go today?')
+plt.savefig("barh.eps",format="eps")
+
+
+
 
 """
 
