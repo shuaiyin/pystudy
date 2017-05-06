@@ -19,13 +19,13 @@ cur = conn.cursor()
 
 
 
-rowsEachFile = 25
+rowsEachFile = 40
 fileCnt = 20
 
 for i in range(0,fileCnt):
-	filename = str(1000 + i*rowsEachFile+1)+"-"+str(1000 +(i+1)*rowsEachFile) + '.txt'
-	f = open('/home/yinshuai/onionFolder1214-1001-1500/' + filename,'a')
-	sql = "select distinct(onion_addr) as onion_addr,id from ONION where ip = '47.88.12.14' and ip_class = 'B' order by id desc limit " + str(1000 + i*rowsEachFile) + ',' + str(rowsEachFile)
+	filename = str(4000 + i*rowsEachFile+1)+"-"+str(4000 +(i+1)*rowsEachFile) + '.txt'
+	f = open('/home/yinshuai/onionFolder1214-4001-4757/' + filename,'a')
+	sql = "select distinct(onion_addr) as onion_addr,id from ONION where ip = '47.88.12.14' and ip_class = 'B' order by id desc limit " + str(4000 + i*rowsEachFile) + ',' + str(rowsEachFile)
 	print sql
 	cur.execute(sql) 
 	onion_data = cur.fetchall()

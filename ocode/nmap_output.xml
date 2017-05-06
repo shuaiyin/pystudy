@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/bin/../share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.01 scan initiated Tue May  2 16:33:15 2017 as: nmap -v -sn -PE -n -&#45;min-hostgroup 1024 -&#45;min-parallelism 10 -oX nmap_output.xml 11111111.onion -->
+<nmaprun scanner="nmap" args="nmap -v -sn -PE -n -&#45;min-hostgroup 1024 -&#45;min-parallelism 10 -oX nmap_output.xml 11111111.onion" start="1493713995" startstr="Tue May  2 16:33:15 2017" version="7.01" xmloutputversion="1.04">
+<verbose level="1"/>
+<debugging level="0"/>
+<taskbegin task="Ping Scan" time="1493713995"/>
+<taskend task="Ping Scan" time="1493713995" extrainfo="1 total hosts"/>
+<host><status state="up" reason="conn-refused" reason_ttl="0"/>
+<address addr="224.0.0.1" addrtype="ipv4"/>
+<hostnames>
+<hostname name="11111111.onion" type="user"/>
+</hostnames>
+<times srtt="359" rttvar="5000" to="100000"/>
+</host>
+<runstats><finished time="1493713995" timestr="Tue May  2 16:33:15 2017" elapsed="0.00" summary="Nmap done at Tue May  2 16:33:15 2017; 1 IP address (1 host up) scanned in 0.00 seconds" exit="success"/><hosts up="1" down="0" total="1"/>
+</runstats>
+</nmaprun>

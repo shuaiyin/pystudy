@@ -7,7 +7,8 @@ import sys
 import numpy as np
 # import matplotlib.pyplot as plt
 from pylab import *
-
+from matplotlib.font_manager import FontProperties
+font = FontProperties(fname = "/usr/share/fonts/truetype/arphic/ukai.ttc", size=14)
 
 import MySQLdb
 
@@ -183,7 +184,8 @@ def choose_some_color(cnames,count):
 			color_list.append(color)
 	return color_list
 
-def draw_pic(figsizex,figsizey,draw_dict,color_count,ylimt_bot,ylim_top,title="this is the title",xlabel="this is xlabel",ylabel="this is y label"):
+def draw_pic(figsizex,figsizey,draw_dict,color_count,ylimt_bot,ylim_top,title="this is the title",xlabel="this is xlabel",ylabel="this is y label"
+	,fontproperties=font,fontsize=20):
 	print draw_dict
 	plt.figure(figsize=(figsizex,figsizey))
 	x = draw_dict['xval']
@@ -205,10 +207,10 @@ def draw_pic(figsizex,figsizey,draw_dict,color_count,ylimt_bot,ylim_top,title="t
 		color_num += 1 
 	plt.ylim(ylimt_bot,ylim_top)#set the limit of y xlia 
 	plt.legend(loc="top left",shadow=True)#set the tuli 
-	plt.rcParams['font.sans-serif'] = ['SimHei'] #指定默认字体
+	# plt.rcParams['font.sans-serif'] = ['SimHei'] #指定默认字体
 	plt.title(title)
-	plt.xlabel(xlabel)
-	plt.ylabel(ylabel)
+	plt.xlabel(xlabel,fontproperties=font,fontsize=fontsize)
+	plt.ylabel(ylabel,fontproperties=font,fontsize=fontsize)
 
 	# plt.savefig("./a.png")
 	plt.show()
@@ -218,9 +220,9 @@ def draw_pic(figsizex,figsizey,draw_dict,color_count,ylimt_bot,ylim_top,title="t
 
 ONION_DIR_PATH = '/home/yinshuai/onion0428/'
 NEED_INIT_MYSQL_DATA = False#judge if need reinit the data,default not use,but if you add new onon data.you should reinit the data in db 
-DATA_DRAW = 5#control data draw with default value 0  
+DATA_DRAW = 7#control data draw with default value 0  
 STAT_START_TIME = "2017-02-01 00:00:00"#start time to statistic
-STAT_END_TIME  = "2017-04-28 00:00:00"#end time to statistic 
+STAT_END_TIME  = "2017-04-27 00:00:00"#end time to statistic 
 
 
 
@@ -337,6 +339,17 @@ while temp_timestamp < end_timestamp:
 		stat_data.setdefault(ip[0] + 'B',[])
 		stat_data[ip[0] + 'B'].append(cur.fetchone()[0])
 
+		##this position we add a new param,which is used as calculate the distinct count of each node 
+		sql = "select count(distinct(onion_addr)) from ONION where ip='%s' and ip_class='%s' and getstamp<%s" % (ip[0],'A',temp_timestamp)
+		cur.execute(sql)
+		stat_data.setdefault('distinct:' + ip[0] + 'A',[])##
+		stat_data['distinct:' + ip[0] + 'A'].append(cur.fetchone()[0])
+		sql = "select count(distinct(onion_addr)) from ONION where ip='%s' and ip_class='%s' and getstamp<%s" % (ip[0],'B',temp_timestamp)
+		cur.execute(sql)
+		stat_data.setdefault('distinct:' + ip[0] + 'B',[])##
+		stat_data['distinct:' + ip[0] + 'B'].append(cur.fetchone()[0])
+		
+
 
 ###FINALLY close the handler 
 conn.close()
@@ -363,7 +376,7 @@ elif DATA_DRAW == 3:#draw pic use just totalStatistic and totalDistinctStatistic
 	stat_data_new['totalStatistic'] = stat_data['totalStatistic']
 	stat_data_new['totalDistinctStatistic'] = stat_data['totalDistinctStatistic']
 	stat_data_new['xval'] = stat_data['xval']
-	draw_pic(100,200,stat_data_new,21,5000,238000,title="(Distinct) Total onion address plot",ylabel="Onion address count",xlabel="Datetime")#ylim from 5000 to 50000 
+	draw_pic(100,200,stat_data_new,21,5000,238000,title=u"洋葱地址总数统计图",ylabel="Onion address count",xlabel="Datetime")#ylim from 5000 to 50000 
 
 elif DATA_DRAW == 4:#draw all data simple from some ip .  important 
 	draw_data = {}
@@ -384,11 +397,46 @@ elif DATA_DRAW == 5:#draw difference of total (distinct) for each day
 	draw_pic(100,200,stat_data_new,21,0,90000,title="The Difference between origin onion address and distinct onion address", \
 			 xlabel="Datetime",ylabel="Onion address count")
 
+elif DATA_DRAW == 6:
+	stat_data_new = {}
+	stat_data_new['47.88.12.14A'] = stat_data['47.88.12.14A']
+	stat_data_new['distinct:47.88.12.14A'] = stat_data['distinct:47.88.12.14A']
+	stat_data_new['xval'] = stat_data['xval']
+	draw_pic(100,200,stat_data_new,21,1000,5000,title="(Distinct) Total onion address plot",ylabel="Onion address count",xlabel="Datetime")#ylim from 5000 to 50000 
 
+elif DATA_DRAW == 7: #the average sum ??
+	stat_data_new = {}
+	##less one day 
+	stat_data_new['totalIncreEachDay'] = []
+	stat_data_new['unqiueIncreEachDay'] = []
+	stat_data_new['diffIncreEachDay'] = []
 
+	for index in xrange(1,len(stat_data['totalStatistic'])-4):
+		stat_data_new['totalIncreEachDay'].append(stat_data['totalStatistic'][index] - stat_data['totalStatistic'][index - 1])
+		stat_data_new['unqiueIncreEachDay'].append(stat_data['totalDistinctStatistic'][index] - stat_data['totalDistinctStatistic'][index-1])
+		# stat_data_new['diffIncreEachDay'].append(stat_data_new['totalIncreEachDay'][index] - stat_data_new['unqiueIncreEachDay'])
+	
+	for index in xrange(0,len(stat_data_new['totalIncreEachDay'])):
+		stat_data_new['diffIncreEachDay'].append(stat_data_new['totalIncreEachDay'][index] - stat_data_new['unqiueIncreEachDay'][index])
 
+	stat_data_new['xval'] = stat_data['xval'][1:-4]
+	draw_pic(100,200,stat_data_new,21,0,6000,title="Daily onion address increment graph", \
+			 xlabel="Datetime",ylabel="Onion address count")	
 
+# elif DATA_DRAW == 7:
+# 	stat_data_new = {}
+# 	# stat_data_new['subval'] = []
+# 	stat_data['totalDistinctStatistic'] = [6096L, 7553L, 9169L, 10656L, 12352L, 13878L, 15252L, 16499L, 17985L, 19394L, 21054L, 22918L, 24627L, 26549L, 28441L, 30420L, 32265L, 34016L, 35772L, 37523L, 39307L, 41118L, 42778L, 44620L, 46495L, 48187L, 49958L, 51947L, 53543L, 55081L, 56524L, 57968L, 59658L, 61395L, 62915L, 64424L, 65891L, 67361L, 68745L, 70415L, 71805L, 73097L, 74492L, 75744L, 76927L, 84225L, 88015L, 89198L, 90432L, 92171L, 93242L, 94427L, 95639L, 100198L, 101408L, 102503L, 103642L, 104779L, 106020L, 107376L, 108627L, 109872L, 111289L, 112653L, 113941L, 115170L, 116282L, 117707L, 118847L, 120731L, 122124L, 123590L, 124767L, 126281L, 127664L, 128992L, 130435L, 131773L, 132855L, 133856L, 134847L, 135957L, 137042L, 137884L, 138639L, 139307L]
 
+# 	stat_data['totalStatistic'] = [6304L, 7877L, 9634L, 11281L, 13198L, 14913L, 16487L, 17937L, 19700L, 21405L, 23437L, 25711L,
+# 	 27886L, 30374L, 32905L, 35494L, 38019L, 40456L, 42961L, 45530L, 48169L, 50858L, 53439L, 56318L, 59220L, 61889L, 64689L, 67623L, 70239L, 72755L, 75139L, 77530L, 80407L, 83385L, 86095L, 88721L, 91463L, 94259L, 96869L, 99857L, 102524L, 104998L, 107763L, 110252L, 112650L, 121174L, 126161L, 128454L, 130730L, 133612L, 135814L, 138272L, 140603L, 146455L, 149036L, 151317L, 153737L, 156104L, 158621L, 161225L, 163758L, 166442L, 169266L, 172041L, 174697L, 177294L, 179637L, 182439L, 184880L, 188146L, 191173L, 194319L, 196938L, 199847L, 202661L, 205371L, 208246L, 210840L, 213282L, 215578L, 217922L, 220509L, 223070L, 225140L, 226930L, 228646L]
 
+		
+	# statLen = len(stat_data['totalStatistic'])
+	# for index in xrange(statLen):
+	# 	stat_data_new['Difference'].append(stat_data['totalStatistic'][index] - stat_data['totalDistinctStatistic'][index])
+	# stat_data_new['xval'] = stat_data['xval']
+	# draw_pic(100,200,stat_data_new,21,0,90000,title="The Difference between origin onion address and distinct onion address", \
+	# 		 xlabel="Datetime",ylabel="Onion address count")
 
 

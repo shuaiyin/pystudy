@@ -185,9 +185,23 @@ plt.rcdefaults()
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+
+# 80:775
+# 22:180
+# 443:67
+# 11009:9
+# 4050:1
+# 6667:7
+# 8080:10
+# 25:21
+# 5222:29
+# 21:1
+# 55080:0
+
 service_port = ('80:http','8080','https:443','ssh:22','smtp:25','xmpp:5222','tor-chat:11009','irc:6667')
 y_pos = np.arange(len(service_port))
-count = np.array([301,2,22,62,4,5,4,3])
+count = np.array([775,10,67,180,21,29,9,7])
 plt.barh(y_pos,count,align='center',alpha=0.4)
 plt.xlabel('Number of hidden services per type')
 plt.title('Number statistics for each type of hidden service')

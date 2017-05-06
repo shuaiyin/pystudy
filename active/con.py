@@ -1,63 +1,36 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-  
-import logging
-from  Queue import Queue
-import threading
-  
-def func_a(a, b):
-    return a + b
-  
-def func_b():
-    pass
-  
-def func_c(a, b, c):
-    return a, b, c
-  
-# 异步任务队列
-_task_queue = Queue(10)
-  
-def async_call(function, callback, *args, **kwargs):
-    _task_queue.put({
-        'function': function,
-        'callback': callback,
-        'args': args,
-        'kwargs': kwargs
-    })
-  
-def _task_queue_consumer():
-    """
-    异步任务队列消费者
-    """
-    while True:
-        try:
-            task = _task_queue.get()
-            function = task.get('function')
-            callback = task.get('callback')
-            args = task.get('args')
-            kwargs = task.get('kwargs')
-            try:
-                if callback:
-                    callback(function(*args, **kwargs))
-            except Exception as ex:
-                if callback:
-                    callback(ex)
-            finally:
-                _task_queue.task_done()
-        except Exception as ex:
-            logging.warning(ex)
-  
-def handle_result(result):
-    print(type(result), result)
-  
-if __name__ == '__main__':
-    t = threading.Thread(target=_task_queue_consumer)
-    t.daemon = True
-    t.start()
-  
-    async_call(func_a, handle_result, 1, 2)
-    async_call(func_b, handle_result)
-    async_call(func_c, handle_result, 1, 2, 3)
-    async_call(func_c, handle_result, 1, 2, 3, 4)
-  
-    _task_queue.join()
+
+import sys
+import argparse
+
+import MySQLdb
+import stem
+from stem.control import Controller
+import os
+import time 
+from multiprocessing import Process
+from timeout import timeout
+import json
+def get_connection():
+    conn= MySQLdb.connect(
+        host='localhost',
+        port = 3306,
+        user='root',
+        passwd='111111',
+        db ='onion_resp',
+        )
+    return conn
+
+
+conn = get_connection()
+sql = "select distinct(onion_addr) from ONION";
+cur = conn.cursor()
+cur.execute(sql);
+ip_list = cur.fetchall()
+for ip in ip_list:
+    onion_addr = ip[0]
+    print onion_addr
+    sql = 'insert into onion_uniques (onion_addr) values ("%s")' % (onion_addr)
+    # print sql
+    cur.execute(sql)
+    conn.commit()
+    # cur.commit()
