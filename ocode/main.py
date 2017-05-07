@@ -240,7 +240,7 @@ cur = conn.cursor()
 if NEED_INIT_MYSQL_DATA:
 	cur.execute("DROP TABLE IF EXISTS ONION")
 	creat_table = """
-		CREATE TABLE ONION(
+		CREATE TABLE If Not Exists ONION(
 		id int unsigned auto_increment primary key ,
 		ip char(16) not null default '',
 		ip_class char(1) not null default '',

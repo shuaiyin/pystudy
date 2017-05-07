@@ -1,0 +1,5 @@
+mysql-password 111111
+onion_path1 /onion_dir 
+onion_path2 /onion_sec
+ip 0.0.0.0
+node_list 0.0.0.0:A,0.0.0.0:B
